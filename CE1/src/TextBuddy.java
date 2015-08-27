@@ -211,23 +211,16 @@ public class TextBuddy {
 	 */
 
 	/**
-	 * This operation scans the command input by user.
+	 * This operation add, display, delete, clear texts 
+	 * or exit program according to user's command.
 	 * 
 	 * @throws IOException		Input/Output operation failed.
 	 */
-	private static void scanCommand() throws IOException {
-		System.out.print(MESSAGE_COMMAND);
-		runUILoop();
-	}
-	
-	/**
-	 * This operation add, display, delete, clear texts 
-	 * or exit program according to user's command.
-	 */
-	private static void runUILoop() {
-		COMMAND_TYPE commandType = checkCommandType(scanner.next());
-		
-		while(true) {
+	private static void runUILoop() throws IOException {
+		while(true) {		
+			System.out.print(MESSAGE_COMMAND);
+			COMMAND_TYPE commandType = checkCommandType(scanner.next());
+			
 			switch(commandType) {
 				case COMMAND_ADD : 
 					addText(scanner.nextLine().trim()); 
@@ -373,7 +366,7 @@ public class TextBuddy {
 	 */
 	private static void welcomeUser() throws IOException {
 		printMessage(String.format(MESSAGE_WELCOME, INPUT_FILE_NAME));
-		scanCommand();
+		runUILoop();
 	}
 
 	/**
