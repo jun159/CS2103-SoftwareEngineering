@@ -55,6 +55,8 @@ public class TextBuddy {
 	private static final String MESSAGE_DOT = ". ";
 	private static final String MESSAGE_NEW_LINE = "\n";
 	
+	private static final String ERROR_CANNOT_DELETE_FILE = "Unable to delete file";
+	private static final String ERROR_CANNOT_RENAME_FILE = "Unable to rename file";
 	private static final String ERROR_COMMAND_NOT_RECOGNIZED = "Unrecognized command type";
 	private static final String ERROR_COMMAND_CANNOT_BE_NULL = "command type string cannot be null!";
 	
@@ -77,15 +79,13 @@ public class TextBuddy {
 	 *  such as adding, deleting or clearing the texts from the text file.
 	 */
 	private static File textFile;
+	private static File tempFile;
 	
 	private static FileReader textFileReader;
 	private static BufferedReader bufferedReader;
 	
 	private static FileWriter textFileWriter;
 	private static BufferedWriter bufferedWriter;
-	
-	private static FileWriter fileNewWriter;
-	private static BufferedWriter bufferedNewWriter;
 	
 	/*
 	 * ========================== FILE METHODS =============================
@@ -111,8 +111,20 @@ public class TextBuddy {
 	 */
 	private static void initializeFile() throws IOException, FileNotFoundException {
 		textFile = new File(INPUT_FILE_NAME);
-		initializeReader();
-		initializeWriter();
+		initializeReader(textFile);
+		initializeWriter(textFile);
+	}
+	
+	/**
+	 * This operation initialize all temporary file objects for the text file. 
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 * @throws FileNotFoundException	 File not found.
+	 */
+	private static void initializeTempFile() throws IOException, FileNotFoundException {
+		tempFile = new File(TEMP_FILE_NAME);
+		initializeReader(textFile);
+		initializeWriter(tempFile);
 	}
 	
 	/**
@@ -121,8 +133,8 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 * @throws FileNotFoundException	 File not found.
 	 */
-	private static void initializeReader() throws IOException, FileNotFoundException {
-		textFileReader = new FileReader(textFile);
+	private static void initializeReader(File inputTextFile) throws IOException, FileNotFoundException {
+		textFileReader = new FileReader(inputTextFile);
 		bufferedReader = new BufferedReader(textFileReader);
 	}
 	
@@ -132,20 +144,9 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 * @throws FileNotFoundException	 File not found.
 	 */
-	private static void initializeWriter() throws IOException, FileNotFoundException {
-		textFileWriter = new FileWriter(INPUT_FILE_NAME);
+	private static void initializeWriter(File inputTextFile) throws IOException, FileNotFoundException {
+		textFileWriter = new FileWriter(inputTextFile);
 		bufferedWriter = new BufferedWriter(textFileWriter);
-	}
-	
-	/**
-	 * This operation initialize all temporary writer objects to read text to text file.
-	 * 
-	 * @throws IOException				 Input/Output operation failed.
-	 * @throws FileNotFoundException	 File not found.
-	 */
-	private static void initializeNewWriter() throws IOException, FileNotFoundException {
-		fileNewWriter = new FileWriter(INPUT_FILE_NAME);
-		bufferedNewWriter = new BufferedWriter(fileNewWriter);
 	}
 	
 	/**
@@ -170,14 +171,19 @@ public class TextBuddy {
 	}
 	
 	/**
-	 * This operation flushes and closes the new writers after finished using.
+	 * This operation deletes the older version of textFile and
+	 * rename the latest tempFile back to filename provided by the user.
 	 * 
-	 * @throws IOException				 Input/Output operation failed.
+	 * @throws IOException				Input/Output operation failed.
 	 */
-	private static void closeNewWriter() throws IOException {
-		bufferedNewWriter.flush();
-		fileNewWriter.close();
-		bufferedNewWriter.close();
+	private static void deleteAndRenameFile() throws IOException {
+		if(!textFile.delete()) {
+			printMessage(ERROR_CANNOT_DELETE_FILE);
+		} 
+		
+		if(!tempFile.renameTo(textFile)) {
+			printMessage(ERROR_CANNOT_RENAME_FILE);
+		}
 	}
 	
 	/*
@@ -228,7 +234,7 @@ public class TextBuddy {
 					displayText(); 
 					break;
 				case COMMAND_DELETE : 
-					deleteText(String.valueOf(Integer.parseInt(scanner.next()) - 1)); 
+					deleteText((scanner.next() + MESSAGE_DOT).trim()); 
 					break;
 				case COMMAND_CLEAR : 
 					clearText(); 
@@ -289,7 +295,7 @@ public class TextBuddy {
 	 * @throws IOException		Input/Output operation failed.
 	 */
 	private static void displayText() throws IOException {
-		initializeReader();
+		initializeReader(textFile);
 		String currentText;
 
 		if((currentText = bufferedReader.readLine()) == null) {
@@ -308,25 +314,25 @@ public class TextBuddy {
 	 * @throws IOException		Input/Output operation failed.
 	 */
 	private static void deleteText(String index) throws IOException {
-		initializeReader();
-		initializeNewWriter();
+		initializeTempFile();
 		resetTextIndex();
 		
 		String currentText;
 		
 		while((currentText = bufferedReader.readLine()) != null) {
-			System.out.println("HEY " + currentText);
-			String currentIndex = currentText.split(" ") [0];
+			String currentIndex = (currentText.split(" ") [0]).trim();
+			
 		    if(currentIndex.equals(index)) {
-		    	printMessage(String.format(MESSAGE_DELETE_TEXT, INPUT_FILE_NAME, currentText));
+		    	printMessage(String.format(MESSAGE_DELETE_TEXT, INPUT_FILE_NAME, currentText.substring(3)));
 		    } else {
-		    	bufferedNewWriter.write(textIndex + MESSAGE_DOT + 
+		    	bufferedWriter.write(textIndex + MESSAGE_DOT + 
 		    			currentText.substring(3) + MESSAGE_NEW_LINE);
 		    	setTextIndex(textIndex + 1);
+		    	bufferedWriter.flush();
 			}
 		}
 		
-		closeNewWriter();
+		deleteAndRenameFile();
 	}
 
 	/**
@@ -337,7 +343,7 @@ public class TextBuddy {
 	private static void clearText() throws IOException {
 		printMessage(String.format(MESSAGE_CLEAR_TEXT, INPUT_FILE_NAME));
 		resetTextIndex();
-		initializeWriter();
+		initializeWriter(textFile);
 	}
 	
 	
