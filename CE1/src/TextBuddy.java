@@ -1,4 +1,4 @@
- /**
+/**
  * This class is used to store and retrieve the texts input by user
  * The user will enter the desired command to add, display and delete texts
  * or clear all texts from the text file. 
@@ -45,7 +45,7 @@ import java.util.Scanner;
 import java.util.logging.Formatter;
 
 public class TextBuddy {
-	
+
 	private static final String MESSAGE_WELCOME = "Welcome to TextBuddy. %1$s is ready for use";
 	private static final String MESSAGE_COMMAND = "command: ";
 	private static final String MESSAGE_EMPTY_FILE = "%1$s is empty";
@@ -54,15 +54,15 @@ public class TextBuddy {
 	private static final String MESSAGE_CLEAR_TEXT = "all content deleted from %1$s";
 	private static final String MESSAGE_DOT = ". ";
 	private static final String MESSAGE_NEW_LINE = "\n";
-	
+
 	private static final String ERROR_CANNOT_DELETE_FILE = "Unable to delete file";
 	private static final String ERROR_CANNOT_RENAME_FILE = "Unable to rename file";
 	private static final String ERROR_COMMAND_NOT_RECOGNIZED = "Unrecognized command type";
 	private static final String ERROR_COMMAND_CANNOT_BE_NULL = "command type string cannot be null!";
-	
+
 	private static final String TEMP_FILE_NAME = "tempfile.txt";
 	private static String INPUT_FILE_NAME;
-	
+
 	/* These are the possible command types */
 	enum COMMAND_TYPE {
 		COMMAND_ADD, COMMAND_DISPLAY, COMMAND_DELETE, COMMAND_CLEAR, COMMAND_EXIT, COMMAND_INVALID
@@ -70,29 +70,29 @@ public class TextBuddy {
 
 	/* This scanner will be used for the whole class. */
 	private static final Scanner scanner = new Scanner(System.in);
-	
+
 	/* This integer will represent the index of each text. */
 	private static int textIndex = 1;
-	
+
 	/*
 	 *  These are the file objects to be used to interact with the text file
 	 *  such as adding, deleting or clearing the texts from the text file.
 	 */
 	private static File textFile;
 	private static File tempFile;
-	
+
 	private static FileReader textFileReader;
 	private static BufferedReader bufferedReader;
-	
+
 	private static FileWriter textFileWriter;
 	private static BufferedWriter bufferedWriter;
-	
+
 	/*
 	 * ========================== FILE METHODS =============================
 	 * The methods below represents the file operations.
 	 * ====================================================================
 	 */
-	
+
 	/**
 	 * This operation sets the file name input by user
 	 * to the string variable INPUT_FILE_NAME.
@@ -102,7 +102,7 @@ public class TextBuddy {
 	private static void setFileName(String fileName) {
 		INPUT_FILE_NAME = fileName;
 	}
-	
+
 	/**
 	 * This operation initialize all file objects for the text file. 
 	 * 
@@ -114,7 +114,7 @@ public class TextBuddy {
 		initializeReader(textFile);
 		initializeWriter(textFile);
 	}
-	
+
 	/**
 	 * This operation initialize all temporary file objects for the text file. 
 	 * 
@@ -126,7 +126,7 @@ public class TextBuddy {
 		initializeReader(textFile);
 		initializeWriter(tempFile);
 	}
-	
+
 	/**
 	 * This operation initialize all reader objects to read text to text file.
 	 * 
@@ -137,7 +137,7 @@ public class TextBuddy {
 		textFileReader = new FileReader(inputTextFile);
 		bufferedReader = new BufferedReader(textFileReader);
 	}
-	
+
 	/**
 	 * This operation initialize all writer objects to read text to text file.
 	 * 
@@ -148,7 +148,7 @@ public class TextBuddy {
 		textFileWriter = new FileWriter(inputTextFile);
 		bufferedWriter = new BufferedWriter(textFileWriter);
 	}
-	
+
 	/**
 	 * This operation closes the readers after finished using.
 	 * 
@@ -158,7 +158,7 @@ public class TextBuddy {
 		textFileReader.close();
 		bufferedReader.close();
 	}
-	
+
 	/**
 	 * This operation flushes and closes the writers after finished using.
 	 * 
@@ -169,7 +169,7 @@ public class TextBuddy {
 		textFileWriter.close();
 		bufferedWriter.close();
 	}
-	
+
 	/**
 	 * This operation deletes the older version of textFile and
 	 * rename the latest tempFile back to filename provided by the user.
@@ -180,18 +180,18 @@ public class TextBuddy {
 		if(!textFile.delete()) {
 			printMessage(ERROR_CANNOT_DELETE_FILE);
 		} 
-		
+
 		if(!tempFile.renameTo(textFile)) {
 			printMessage(ERROR_CANNOT_RENAME_FILE);
 		}
 	}
-	
+
 	/*
 	 * ======================= TEXT INDEX METHODS =========================
 	 * The methods below represents the text index operations.
 	 * ====================================================================
 	 */
-	
+
 	/**
 	 * This operation sets each text with an index.
 	 * 
@@ -200,7 +200,7 @@ public class TextBuddy {
 	private static void setTextIndex(int index) {
 		textIndex = index;
 	}
-	
+
 	/**
 	 * This operation resets the text index to 1
 	 * after the text file is cleared.
@@ -208,7 +208,7 @@ public class TextBuddy {
 	private static void resetTextIndex() {
 		textIndex = 1;
 	}
-	
+
 	/*
 	 * ======================= COMMAND METHODS =========================
 	 * The methods below represents the command operations.
@@ -225,7 +225,7 @@ public class TextBuddy {
 		while(true) {		
 			System.out.print(MESSAGE_COMMAND);
 			COMMAND_TYPE commandType = checkCommandType(scanner.next());
-			
+
 			switch(commandType) {
 				case COMMAND_ADD : 
 					addText(scanner.nextLine().trim()); 
@@ -248,7 +248,7 @@ public class TextBuddy {
 			}
 		}
 	}
-	
+
 	/**
 	 * This operation determines which of the supported 
 	 * command types the user wants to perform.
@@ -269,12 +269,12 @@ public class TextBuddy {
 		} else if (commandTypeString.equals("clear")) {
 			return COMMAND_TYPE.COMMAND_CLEAR;
 		} else if (commandTypeString.equalsIgnoreCase("exit")) {
-		 	return COMMAND_TYPE.COMMAND_EXIT;
+			return COMMAND_TYPE.COMMAND_EXIT;
 		} else {
 			return COMMAND_TYPE.COMMAND_INVALID;
 		}
 	}
-	
+
 	/**
 	 * This operation adds text entered by user when the command is "add".
 	 * 
@@ -316,22 +316,22 @@ public class TextBuddy {
 	private static void deleteText(String index) throws IOException {
 		initializeTempFile();
 		resetTextIndex();
-		
+
 		String currentText;
-		
+
 		while((currentText = bufferedReader.readLine()) != null) {
 			String currentIndex = (currentText.split(" ") [0]).trim();
-			
-		    if(currentIndex.equals(index)) {
-		    	printMessage(String.format(MESSAGE_DELETE_TEXT, INPUT_FILE_NAME, currentText.substring(3)));
-		    } else {
-		    	bufferedWriter.write(textIndex + MESSAGE_DOT + 
-		    			currentText.substring(3) + MESSAGE_NEW_LINE);
-		    	setTextIndex(textIndex + 1);
-		    	bufferedWriter.flush();
+
+			if(currentIndex.equals(index)) {
+				printMessage(String.format(MESSAGE_DELETE_TEXT, INPUT_FILE_NAME, currentText.substring(3)));
+			} else {
+				bufferedWriter.write(textIndex + MESSAGE_DOT + 
+						currentText.substring(3) + MESSAGE_NEW_LINE);
+				setTextIndex(textIndex + 1);
+				bufferedWriter.flush();
 			}
 		}
-		
+
 		deleteAndRenameFile();
 	}
 
@@ -345,8 +345,8 @@ public class TextBuddy {
 		resetTextIndex();
 		initializeWriter(textFile);
 	}
-	
-	
+
+
 	/**
 	 * This operation closes file writer and buffered writer
 	 * and exits the program.
@@ -357,13 +357,13 @@ public class TextBuddy {
 		closeWriter();
 		System.exit(0);
 	}
-	
+
 	/*
 	 * ======================= PRINT MESSAGE METHODS ======================
 	 * The methods below represents the print message operations.
 	 * ====================================================================
 	 */
-	
+
 
 	/**
 	 * 
