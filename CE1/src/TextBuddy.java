@@ -78,7 +78,7 @@ public class TextBuddy {
 	 */
 	private static File textFile;
 	
-	private static FileReader fileReader;
+	private static FileReader textFileReader;
 	private static BufferedReader bufferedReader;
 	
 	private static FileWriter textFileWriter;
@@ -111,10 +111,8 @@ public class TextBuddy {
 	 */
 	private static void initializeFile() throws IOException, FileNotFoundException {
 		textFile = new File(INPUT_FILE_NAME);
-		textFileWriter = new FileWriter(textFile.getAbsoluteFile());
-		fileReader = new FileReader(textFile);
-		bufferedReader = new BufferedReader(new FileReader(textFile));
-		bufferedWriter = new BufferedWriter(textFileWriter);
+		initializeReader();
+		initializeWriter();
 	}
 	
 	/**
@@ -124,8 +122,8 @@ public class TextBuddy {
 	 * @throws FileNotFoundException	 File not found.
 	 */
 	private static void initializeReader() throws IOException, FileNotFoundException {
-		fileReader = new FileReader(textFile);
-		bufferedReader = new BufferedReader(fileReader);
+		textFileReader = new FileReader(textFile);
+		bufferedReader = new BufferedReader(textFileReader);
 	}
 	
 	/**
@@ -136,6 +134,7 @@ public class TextBuddy {
 	 */
 	private static void initializeWriter() throws IOException, FileNotFoundException {
 		textFileWriter = new FileWriter(INPUT_FILE_NAME);
+		bufferedWriter = new BufferedWriter(textFileWriter);
 	}
 	
 	/**
@@ -155,7 +154,7 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 */
 	private static void closeReader() throws IOException {
-		fileReader.close();
+		textFileReader.close();
 		bufferedReader.close();
 	}
 	
@@ -293,15 +292,13 @@ public class TextBuddy {
 		initializeReader();
 		String currentText;
 
-		if(bufferedReader.readLine() == null) {
+		if((currentText = bufferedReader.readLine()) == null) {
 			printMessage(String.format(MESSAGE_EMPTY_FILE, INPUT_FILE_NAME));
 		} else {
-			while((currentText = bufferedReader.readLine()) != null) {
+			do {
 				printMessage(currentText);
-			}
+			} while((currentText = bufferedReader.readLine()) != null);
 		}
-		
-		closeReader();
 	}
 
 	/**
@@ -313,14 +310,19 @@ public class TextBuddy {
 	private static void deleteText(String index) throws IOException {
 		initializeReader();
 		initializeNewWriter();
+		resetTextIndex();
+		
 		String currentText;
 		
 		while((currentText = bufferedReader.readLine()) != null) {
+			System.out.println("HEY " + currentText);
 			String currentIndex = currentText.split(" ") [0];
 		    if(currentIndex.equals(index)) {
 		    	printMessage(String.format(MESSAGE_DELETE_TEXT, INPUT_FILE_NAME, currentText));
 		    } else {
-		    	bufferedNewWriter.write(currentText + MESSAGE_NEW_LINE);
+		    	bufferedNewWriter.write(textIndex + MESSAGE_DOT + 
+		    			currentText.substring(3) + MESSAGE_NEW_LINE);
+		    	setTextIndex(textIndex + 1);
 			}
 		}
 		
