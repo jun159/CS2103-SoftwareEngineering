@@ -58,14 +58,15 @@ public class TextBuddy {
 	private static final String ERROR_CANNOT_DELETE_FILE = "Unable to delete file";
 	private static final String ERROR_CANNOT_RENAME_FILE = "Unable to rename file";
 	private static final String ERROR_COMMAND_NOT_RECOGNIZED = "Unrecognized command type";
-	private static final String ERROR_COMMAND_CANNOT_BE_NULL = "command type string cannot be null!";
+	private static final String ERROR_COMMAND_CANNOT_BE_NULL = "command type string cannot be null";
 
 	private static final String TEMP_FILE_NAME = "tempfile.txt";
 	private static String INPUT_FILE_NAME;
 
 	/* These are the possible command types */
 	enum COMMAND_TYPE {
-		COMMAND_ADD, COMMAND_DISPLAY, COMMAND_DELETE, COMMAND_CLEAR, COMMAND_EXIT, COMMAND_INVALID
+		COMMAND_ADD, COMMAND_DISPLAY, COMMAND_DELETE, 
+		COMMAND_CLEAR, COMMAND_EXIT, COMMAND_INVALID
 	};
 
 	/* This scanner will be used for the whole class. */
@@ -109,7 +110,9 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 * @throws FileNotFoundException	 File not found.
 	 */
-	private static void initializeFile() throws IOException, FileNotFoundException {
+	private static void initializeFile() 
+			throws IOException, FileNotFoundException {
+		
 		textFile = new File(INPUT_FILE_NAME);
 		initializeReader(textFile);
 		initializeWriter(textFile);
@@ -121,7 +124,9 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 * @throws FileNotFoundException	 File not found.
 	 */
-	private static void initializeTempFile() throws IOException, FileNotFoundException {
+	private static void initializeTempFile() 
+			throws IOException, FileNotFoundException {
+		
 		tempFile = new File(TEMP_FILE_NAME);
 		initializeReader(textFile);
 		initializeWriter(tempFile);
@@ -133,7 +138,9 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 * @throws FileNotFoundException	 File not found.
 	 */
-	private static void initializeReader(File inputTextFile) throws IOException, FileNotFoundException {
+	private static void initializeReader(File inputTextFile) 
+			throws IOException, FileNotFoundException {
+		
 		textFileReader = new FileReader(inputTextFile);
 		bufferedReader = new BufferedReader(textFileReader);
 	}
@@ -144,7 +151,9 @@ public class TextBuddy {
 	 * @throws IOException				 Input/Output operation failed.
 	 * @throws FileNotFoundException	 File not found.
 	 */
-	private static void initializeWriter(File inputTextFile) throws IOException, FileNotFoundException {
+	private static void initializeWriter(File inputTextFile) 
+			throws IOException, FileNotFoundException {
+		
 		textFileWriter = new FileWriter(inputTextFile);
 		bufferedWriter = new BufferedWriter(textFileWriter);
 	}
@@ -323,7 +332,8 @@ public class TextBuddy {
 			String currentIndex = (currentText.split(" ") [0]).trim();
 
 			if(currentIndex.equals(index)) {
-				printMessage(String.format(MESSAGE_DELETE_TEXT, INPUT_FILE_NAME, currentText.substring(3)));
+				printMessage(String.format(MESSAGE_DELETE_TEXT, 
+						INPUT_FILE_NAME, currentText.substring(3)));
 			} else {
 				bufferedWriter.write(textIndex + MESSAGE_DOT + 
 						currentText.substring(3) + MESSAGE_NEW_LINE);
