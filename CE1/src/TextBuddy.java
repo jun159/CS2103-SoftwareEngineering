@@ -211,38 +211,44 @@ public class TextBuddy {
 	 */
 
 	/**
-	 * This operation add, display, delete, clear texts 
-	 * or exit program according to user's command.
+	 * This operation scans the command input by user.
 	 * 
 	 * @throws IOException		Input/Output operation failed.
 	 */
 	private static void scanCommand() throws IOException {
 		System.out.print(MESSAGE_COMMAND);
-		
+		runUILoop();
+	}
+	
+	/**
+	 * This operation add, display, delete, clear texts 
+	 * or exit program according to user's command.
+	 */
+	private static void runUILoop() {
 		COMMAND_TYPE commandType = checkCommandType(scanner.next());
-
-		switch(commandType) {
-			case COMMAND_ADD : 
-				addText(scanner.nextLine().trim()); 
-				break;
-			case COMMAND_DISPLAY : 
-				displayText(); 
-				break;
-			case COMMAND_DELETE : 
-				deleteText(String.valueOf(Integer.parseInt(scanner.next()) - 1)); 
-				break;
-			case COMMAND_CLEAR : 
-				clearText(); 
-				break;
-			case COMMAND_EXIT : 
-				exit();
-				break;
-			default:
-				// throw an error if command is not recognized
-				throw new Error(ERROR_COMMAND_NOT_RECOGNIZED);
+		
+		while(true) {
+			switch(commandType) {
+				case COMMAND_ADD : 
+					addText(scanner.nextLine().trim()); 
+					break;
+				case COMMAND_DISPLAY : 
+					displayText(); 
+					break;
+				case COMMAND_DELETE : 
+					deleteText(String.valueOf(Integer.parseInt(scanner.next()) - 1)); 
+					break;
+				case COMMAND_CLEAR : 
+					clearText(); 
+					break;
+				case COMMAND_EXIT : 
+					exit();
+					break;
+				default:
+					// throw an error if command is not recognized
+					throw new Error(ERROR_COMMAND_NOT_RECOGNIZED);
+			}
 		}
-
-		scanCommand();
 	}
 	
 	/**
