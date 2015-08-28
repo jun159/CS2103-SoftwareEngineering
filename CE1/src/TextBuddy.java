@@ -103,6 +103,19 @@ public class TextBuddy {
 	private static void setFileName(String fileName) {
 		INPUT_FILE_NAME = fileName;
 	}
+	
+	/**
+	 * This operation creates the file (file name is provided by the user)
+	 * if the file does not exist yet.
+	 * 
+	 * @param inputTextFile		File to be created.
+	 * @throws IOException				 Input/Output operation failed.
+	 */
+	private static void createFile(File inputTextFile) throws IOException {
+		if(!inputTextFile.exists()) {
+			inputTextFile.createNewFile();
+		}
+	}
 
 	/**
 	 * This operation initialize all file objects for the text file. 
@@ -116,6 +129,7 @@ public class TextBuddy {
 		textFile = new File(INPUT_FILE_NAME);
 		initializeReader(textFile);
 		initializeWriter(textFile);
+		createFile(textFile);
 	}
 
 	/**
