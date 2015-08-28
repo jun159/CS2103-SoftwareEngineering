@@ -109,7 +109,6 @@ public class TextBuddy {
 	 * if the file does not exist yet.
 	 * 
 	 * @param inputTextFile		File to be created.
-	 * @throws IOException				 Input/Output operation failed.
 	 */
 	private static void createFile(File inputTextFile) throws IOException {
 		if(!inputTextFile.exists()) {
@@ -127,9 +126,9 @@ public class TextBuddy {
 			throws IOException, FileNotFoundException {
 		
 		textFile = new File(INPUT_FILE_NAME);
+		createFile(textFile);
 		initializeReader(textFile);
 		initializeWriter(textFile);
-		createFile(textFile);
 	}
 
 	/**
