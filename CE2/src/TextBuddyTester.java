@@ -26,6 +26,13 @@ public class TextBuddyTester {
 	private static final String TEXT_5 = "Bishan";
 	private static final String TEXT_6 = "Chua Chu Kang";
 	
+	private static final String NUM_1 = "1. ";
+	private static final String NUM_2 = "2. ";
+	private static final String NUM_3 = "3. ";
+	private static final String NUM_4 = "4. ";
+	private static final String NUM_5 = "5. ";
+	
+	
 	private static final int NUMBER_OF_TEXTS_CONTAINING_WORD_EAST = 2;
 	
 	@Before
@@ -49,9 +56,8 @@ public class TextBuddyTester {
 	@Test
 	public void testSortList() throws IOException {
 		TextBuddy.executeCommand(COMMAND_SORT, null);
-		assertEquals("1. " + TEXT_3 + "2. " + TEXT_5 + "3. " + TEXT_2 + "4. " 
-				+ TEXT_4 + "5. " + TEXT_1, TextBuddy.executeCommand(COMMAND_DISPLAY, null));
-		TextBuddy.clearText();
+		assertEquals(NUM_1 + TEXT_3 + NUM_2 + TEXT_5 + NUM_3 + TEXT_2 + NUM_4 
+				+ TEXT_4 + NUM_5 + TEXT_1, TextBuddy.executeCommand(COMMAND_DISPLAY, null));
 	}
 	
 	/*
@@ -64,7 +70,6 @@ public class TextBuddyTester {
 	public void testSearchNullInput() throws IOException {
 		assertEquals(TextBuddy.ERROR_NULL_SEARCH_INPUT, 
 				TextBuddy.executeCommand(COMMAND_SEARCH, null));
-		TextBuddy.clearText();
 	}
 	
 	
@@ -72,14 +77,12 @@ public class TextBuddyTester {
 	public void testSearchEmptyResult() throws IOException {
 		assertEquals(String.format(TextBuddy.MESSAGE_SEARCH_IS_EMPTY, TEXT_6, INPUT_FILE_NAME), 
 				TextBuddy.executeCommand(COMMAND_SEARCH, TEXT_6));
-		TextBuddy.clearText();
 	}
 	
 	@Test
 	public void testSearchResult() throws IOException {
 		assertEquals(String.format(TextBuddy.MESSAGE_SEARCH_TEXT, NUMBER_OF_TEXTS_CONTAINING_WORD_EAST , 
-				SEARCH_WORD, INPUT_FILE_NAME) + "1. " + TEXT_2 + "2. " + TEXT_4,
+				SEARCH_WORD, INPUT_FILE_NAME) + NUM_1 + TEXT_2 + NUM_2 + TEXT_4,
 				TextBuddy.executeCommand(COMMAND_SEARCH, SEARCH_WORD));
-		TextBuddy.clearText();
 	}
 }
