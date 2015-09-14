@@ -273,7 +273,7 @@ public class TextBuddy {
 			case COMMAND_DISPLAY : 
 				return displayText(); 
 			case COMMAND_DELETE : 
-				return deleteText((text + MESSAGE_DOT)); 
+				return deleteText((text + MESSAGE_DOT).trim()); 
 			case COMMAND_CLEAR : 
 				return clearText(); 
 			case COMMAND_SORT:
@@ -346,20 +346,22 @@ public class TextBuddy {
 	}
 
 	private static String deleteText(String index) throws IOException {
+		String message = "";
+		
 		initializeTempFile();
 		resetTextIndex();
 
-		String message = "", currentText;
+		String currentText;
 
 		while((currentText = bufferedReader.readLine()) != null) {
-			String currentIndex = (currentText.split(" ") [START_INDEX]).trim();
+			String currentIndex = (currentText.split(" ") [0]).trim();
 
-			if (currentIndex.equals(index)) {
+			if(currentIndex.equals(index)) {
 				message = printMessage(String.format(MESSAGE_DELETE_TEXT, 
-						INPUT_FILE_NAME, currentText.substring(START_INDEX_OF_TEXT)));
+						INPUT_FILE_NAME, currentText.substring(3)));
 			} else {
 				bufferedWriter.write(textIndex + MESSAGE_DOT + 
-						currentText.substring(START_INDEX_OF_TEXT) + MESSAGE_NEW_LINE);
+						currentText.substring(3) + MESSAGE_NEW_LINE);
 				setTextIndex(textIndex + 1);
 				bufferedWriter.flush();
 			}
