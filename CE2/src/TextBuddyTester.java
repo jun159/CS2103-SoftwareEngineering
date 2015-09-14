@@ -66,4 +66,12 @@ public class TextBuddyTester {
 				TextBuddy.executeCommand(COMMAND_SEARCH, null));
 		TextBuddy.clearText();
 	}
+	
+	
+	@Test
+	public void testSearchEmptyResult() throws IOException {
+		assertEquals(String.format(TextBuddy.MESSAGE_SEARCH_IS_EMPTY, TEXT_6, INPUT_FILE_NAME), 
+				TextBuddy.executeCommand(COMMAND_SEARCH, TEXT_6));
+		TextBuddy.clearText();
+	}
 }
