@@ -1,3 +1,5 @@
+package src;
+
 /**
  * This class is used to store and retrieve the texts input by user
  * The user will enter the desired command to add, display and delete texts
@@ -43,6 +45,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Formatter;
 
@@ -56,13 +59,16 @@ public class TextBuddy {
 	public static final String MESSAGE_CLEAR_TEXT = "all content deleted from %1$s";
 	public static final String MESSAGE_SORT_TEXT = "%1$s content sorted in alphabetical order";
 	public static final String MESSAGE_SEARCH_TEXT = "%1$s results containing word \"%2$s\" found in %3$s:";
+	public static final String MESSAGE_SEARCH_IS_EMPTY = "there is no text containing word \"%1$s\" found in %2$s";
 	public static final String MESSAGE_DOT = ". ";
 	public static final String MESSAGE_NEW_LINE = "\n";
 
-	public static final String ERROR_CANNOT_DELETE_FILE = "Unable to delete file";
-	public static final String ERROR_CANNOT_RENAME_FILE = "Unable to rename file";
-	public static final String ERROR_COMMAND_NOT_RECOGNIZED = "Unrecognized command type";
+	public static final String ERROR_CANNOT_DELETE_FILE = "unable to delete file";
+	public static final String ERROR_CANNOT_RENAME_FILE = "unable to rename file";
+	public static final String ERROR_COMMAND_NOT_RECOGNIZED = "unrecognized command type";
 	public static final String ERROR_COMMAND_CANNOT_BE_NULL = "command type string cannot be null";
+	public static final String ERROR_LIST_IS_EMPTY = "unable to sort list as the list is empty";
+	public static final String ERROR_NULL_SEARCH_INPUT = "please ensure that your input is not empty";
 
 	private static final String TEMP_FILE_NAME = "tempfile.txt";
 	private static String INPUT_FILE_NAME;
@@ -94,6 +100,12 @@ public class TextBuddy {
 
 	private static FileWriter textFileWriter;
 	private static BufferedWriter bufferedWriter;
+	
+	public TextBuddy(String fileName) throws FileNotFoundException, IOException {
+		setFileName(fileName);
+		initializeFile();
+		scanCommand();
+	}
 
 	/*
 	 * ========================== FILE METHODS =============================
@@ -244,32 +256,30 @@ public class TextBuddy {
 	private static void runUILoop() throws IOException {
 		while(true) {		
 			System.out.print(MESSAGE_COMMAND);
-			executeCommand(scanner.next(), scanner.nextLine().trim());
+			try {
+				executeCommand(scanner.next(), scanner.nextLine().trim());
+			} catch (NoSuchElementException e) {
+				break;
+			}
 		}
 	}
 	
 	public static String executeCommand(String command, String text) throws IOException {
 		COMMAND_TYPE commandType = checkCommandType(command);
-
+		
 		switch(commandType) {
 			case COMMAND_ADD : 
-				addText(text, true); 
-				break;
+				return addText(text, true); 
 			case COMMAND_DISPLAY : 
-				displayText(); 
-				break;
+				return displayText(); 
 			case COMMAND_DELETE : 
-				deleteText((text + MESSAGE_DOT)); 
-				break;
+				return deleteText((text + MESSAGE_DOT)); 
 			case COMMAND_CLEAR : 
-				clearText(); 
-				break;
+				return clearText(); 
 			case COMMAND_SORT:
-				sortText();
-				break;
+				return sortText();
 			case COMMAND_SEARCH:
-				searchText(text);
-				break;
+				return searchText(text);
 			case COMMAND_EXIT : 
 				exit();
 				break;
@@ -278,7 +288,7 @@ public class TextBuddy {
 				throw new Error(ERROR_COMMAND_NOT_RECOGNIZED);
 		}
 		
-		return "";
+		return null;
 	}
 
 	/**
@@ -360,7 +370,7 @@ public class TextBuddy {
 		return message;
 	}
 
-	private static String clearText() throws IOException {
+	public static String clearText() throws IOException {
 		resetTextIndex();
 		initializeWriter(textFile);
 		return printMessage(String.format(MESSAGE_CLEAR_TEXT, INPUT_FILE_NAME));
@@ -384,12 +394,17 @@ public class TextBuddy {
 	private static String searchText(String searchWord) throws IOException {
 		List<String> textList = retrieveAllTexts();
 		List<String> searchResultList = new ArrayList<String>();
-		int numberOfTexts = textList.size();
 		
-		for(int i = 0; i < numberOfTexts; i++) {
-			String text = textList.get(i);
-			if(text.contains(searchWord)) {
-				searchResultList.add(text);
+		if(searchWord == null) {
+			return ERROR_NULL_SEARCH_INPUT;
+		} else {
+			int numberOfTexts = textList.size();
+			
+			for(int i = 0; i < numberOfTexts; i++) {
+				String text = textList.get(i);
+				if(text.contains(searchWord)) {
+					searchResultList.add(text);
+				}
 			}
 		}
 		
@@ -460,12 +475,16 @@ public class TextBuddy {
 	private static String printSearchResults(List<String> textList, String searchWord) {
 		String message = "";
 		int numberOfSearchResults = textList.size();
-		printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
 		
-		for(int i = 1; i <= numberOfSearchResults; i++) {
-			message += printMessage(i + MESSAGE_DOT + textList.get(i));
+		if(numberOfSearchResults == 0) {
+			message = printMessage(String.format(MESSAGE_SEARCH_IS_EMPTY, searchWord, INPUT_FILE_NAME));
+		} else {
+			message += printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
+			for(int i = 1; i <= numberOfSearchResults; i++) {
+				message += printMessage(i + MESSAGE_DOT + textList.get(i - 1));
+			}
 		}
-		
+
 		return message;
 	}
 	
