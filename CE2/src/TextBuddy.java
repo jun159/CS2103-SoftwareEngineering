@@ -484,7 +484,7 @@ public class TextBuddy {
 		} else {
 			message += printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
 			for(int i = 1; i <= numberOfSearchResults; i++) {
-				message += printMessage(i + MESSAGE_DOT + textList.get(i - 1));
+				message += printMessage(i + MESSAGE_DOT + textList.get(i - 1).trim());
 			}
 		}
 
