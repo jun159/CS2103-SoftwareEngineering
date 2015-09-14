@@ -74,6 +74,7 @@ public class TextBuddy {
 	private static String INPUT_FILE_NAME;
 	
 	private static final int START_INDEX = 0;
+	private static final int INCREMENT_INDEX = 1;
 	private static final int START_INDEX_OF_TEXT = 3;
 
 	/* These are the possible command types */
@@ -324,7 +325,7 @@ public class TextBuddy {
 	private static String addText(String inputText, boolean isPrintMessage) throws IOException {
 		bufferedWriter.write(textIndex + MESSAGE_DOT + inputText + MESSAGE_NEW_LINE);
 		bufferedWriter.flush();
-		setTextIndex(textIndex + 1);
+		setTextIndex(++textIndex);
 		if (isPrintMessage) return printMessage(String.format(MESSAGE_ADD_TEXT, INPUT_FILE_NAME, inputText));
 		return "";
 	}
@@ -354,15 +355,15 @@ public class TextBuddy {
 		String currentText;
 
 		while((currentText = bufferedReader.readLine()) != null) {
-			String currentIndex = (currentText.split(" ") [0]).trim();
+			String currentIndex = (currentText.split(" ") [START_INDEX]).trim();
 
 			if(currentIndex.equals(index)) {
 				message = printMessage(String.format(MESSAGE_DELETE_TEXT, 
-						INPUT_FILE_NAME, currentText.substring(3)));
+						INPUT_FILE_NAME, currentText.substring(START_INDEX_OF_TEXT)));
 			} else {
 				bufferedWriter.write(textIndex + MESSAGE_DOT + 
-						currentText.substring(3) + MESSAGE_NEW_LINE);
-				setTextIndex(textIndex + 1);
+						currentText.substring(START_INDEX_OF_TEXT) + MESSAGE_NEW_LINE);
+				setTextIndex(++textIndex);
 				bufferedWriter.flush();
 			}
 		}
