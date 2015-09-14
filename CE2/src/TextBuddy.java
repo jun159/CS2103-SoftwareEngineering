@@ -397,20 +397,16 @@ public class TextBuddy {
 	private static String searchText(String searchWord) throws IOException {
 		List<String> textList = retrieveAllTexts();
 		List<String> searchResultList = new ArrayList<String>();
-		
-		if(searchWord == null) {
-			return ERROR_NULL_SEARCH_INPUT;
-		} else {
-			int numberOfTexts = textList.size();
-			
-			for(int i = 0; i < numberOfTexts; i++) {
-				String text = textList.get(i);
-				if(text.contains(searchWord)) {
-					searchResultList.add(text);
-				}
+
+		int numberOfTexts = textList.size();
+
+		for(int i = 0; i < numberOfTexts; i++) {
+			String text = textList.get(i);
+			if(text.contains(searchWord)) {
+				searchResultList.add(text);
 			}
 		}
-		
+
 		return printSearchResults(searchResultList, searchWord);
 	}
 	
@@ -478,14 +474,10 @@ public class TextBuddy {
 	private static String printSearchResults(List<String> textList, String searchWord) {
 		String message = "";
 		int numberOfSearchResults = textList.size();
-		
-		if(numberOfSearchResults == 0) {
-			message = printMessage(String.format(MESSAGE_SEARCH_IS_EMPTY, searchWord, INPUT_FILE_NAME));
-		} else {
-			message += printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
-			for(int i = 1; i <= numberOfSearchResults; i++) {
-				message += printMessage(i + MESSAGE_DOT + textList.get(i - 1).trim());
-			}
+
+		message += printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
+		for(int i = 1; i <= numberOfSearchResults; i++) {
+			message += printMessage(i + MESSAGE_DOT + textList.get(i - 1).trim());
 		}
 
 		return message;
