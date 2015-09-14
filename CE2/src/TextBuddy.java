@@ -55,7 +55,7 @@ public class TextBuddy {
 	private static final String MESSAGE_DELETE_TEXT = "deleted from %1$s: \"%2$s\"";
 	private static final String MESSAGE_CLEAR_TEXT = "all content deleted from %1$s";
 	private static final String MESSAGE_SORT_TEXT = "%1$s content sorted in alphabetical order";
-	private static final String MESSAGE_SEARCH_TEXT = "%1$s results containing word \"%2$s\" found in %3$s";
+	private static final String MESSAGE_SEARCH_TEXT = "%1$s results containing word \"%2$s\" found in %3$s:";
 	private static final String MESSAGE_DOT = ". ";
 	private static final String MESSAGE_NEW_LINE = "\n";
 
@@ -118,7 +118,7 @@ public class TextBuddy {
 	 * @param inputTextFile		File to be created.
 	 */
 	private static void createFile(File inputTextFile) throws IOException {
-		if(!inputTextFile.exists()) {
+		if (!inputTextFile.exists()) {
 			inputTextFile.createNewFile();
 		}
 	}
@@ -206,11 +206,11 @@ public class TextBuddy {
 	 * @throws IOException				Input/Output operation failed.
 	 */
 	private static void deleteAndRenameFile() throws IOException {
-		if(!textFile.delete()) {
+		if (!textFile.delete()) {
 			printMessage(ERROR_CANNOT_DELETE_FILE);
 		} 
 
-		if(!tempFile.renameTo(textFile)) {
+		if (!tempFile.renameTo(textFile)) {
 			printMessage(ERROR_CANNOT_RENAME_FILE);
 		}
 	}
@@ -308,7 +308,7 @@ public class TextBuddy {
 	private static void addText(String inputText, boolean isPrintMessage) throws IOException {
 		bufferedWriter.write(textIndex + MESSAGE_DOT + inputText + MESSAGE_NEW_LINE);
 		bufferedWriter.flush();
-		if(isPrintMessage) printMessage(String.format(MESSAGE_ADD_TEXT, INPUT_FILE_NAME, inputText));
+		if (isPrintMessage) printMessage(String.format(MESSAGE_ADD_TEXT, INPUT_FILE_NAME, inputText));
 		setTextIndex(textIndex + 1);
 	}
 
@@ -316,7 +316,7 @@ public class TextBuddy {
 		initializeReader(textFile);
 		String currentText;
 
-		if((currentText = bufferedReader.readLine()) == null) {
+		if ((currentText = bufferedReader.readLine()) == null) {
 			printMessage(String.format(MESSAGE_EMPTY_FILE, INPUT_FILE_NAME));
 		} else {
 			do {
@@ -334,7 +334,7 @@ public class TextBuddy {
 		while((currentText = bufferedReader.readLine()) != null) {
 			String currentIndex = (currentText.split(" ") [START_INDEX]).trim();
 
-			if(currentIndex.equals(index)) {
+			if (currentIndex.equals(index)) {
 				printMessage(String.format(MESSAGE_DELETE_TEXT, 
 						INPUT_FILE_NAME, currentText.substring(START_INDEX_OF_TEXT)));
 			} else {
@@ -369,6 +369,21 @@ public class TextBuddy {
 		printMessage(String.format(MESSAGE_SORT_TEXT, INPUT_FILE_NAME));
 	}
 	
+	private static void searchText(String searchWord) throws IOException {
+		List<String> textList = retrieveAllTexts();
+		List<String> searchResultList = new ArrayList<String>();
+		int numberOfTexts = textList.size();
+		
+		for(int i = 0; i < numberOfTexts; i++) {
+			String text = textList.get(i);
+			if(text.contains(searchWord)) {
+				searchResultList.add(text);
+			}
+		}
+		
+		printSearchResults(searchResultList, searchWord);
+	}
+	
 	private static List<String> retrieveAllTexts() throws IOException {
 		List<String> textList = new ArrayList<String>();
 		String currentText;
@@ -380,10 +395,6 @@ public class TextBuddy {
 		}
 		
 		return textList;
-	}
-	
-	private static void searchText(String search) throws IOException {
-		printMessage(String.format(MESSAGE_SEARCH_TEXT, INPUT_FILE_NAME));
 	}
 
 	/**
@@ -403,7 +414,6 @@ public class TextBuddy {
 	 * ====================================================================
 	 */
 
-
 	/**
 	 * 
 	 * This operation prints the welcome message 
@@ -411,7 +421,7 @@ public class TextBuddy {
 	 * 
 	 * @throws IOException 		Input/Output operation failed.	
 	 */
-	private static void welcomeUser() throws IOException {
+	private static void scanCommand() throws IOException {
 		printMessage(String.format(MESSAGE_WELCOME, INPUT_FILE_NAME));
 		runUILoop();
 	}
@@ -419,10 +429,19 @@ public class TextBuddy {
 	private static void printMessage(String text) {
 		System.out.println(text);
 	}
-
+	
+	private static void printSearchResults(List<String> textList, String searchWord) {
+		int numberOfSearchResults = textList.size();
+		printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
+		
+		for(int i = 1; i <= numberOfSearchResults; i++) {
+			printMessage(i + MESSAGE_DOT + textList.get(i));
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 		setFileName(args[START_INDEX]);
 		initializeFile();
-		welcomeUser();
+		scanCommand();
 	}
 }
