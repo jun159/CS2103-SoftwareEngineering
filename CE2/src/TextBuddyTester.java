@@ -74,4 +74,12 @@ public class TextBuddyTester {
 				TextBuddy.executeCommand(COMMAND_SEARCH, TEXT_6));
 		TextBuddy.clearText();
 	}
+	
+	@Test
+	public void testSearchResult() throws IOException {
+		assertEquals(String.format(TextBuddy.MESSAGE_SEARCH_TEXT, NUMBER_OF_TEXTS_CONTAINING_WORD_EAST , 
+				SEARCH_WORD, INPUT_FILE_NAME) + "1. " + TEXT_2 + "2. " + TEXT_4,
+				TextBuddy.executeCommand(COMMAND_SEARCH, SEARCH_WORD));
+		TextBuddy.clearText();
+	}
 }
