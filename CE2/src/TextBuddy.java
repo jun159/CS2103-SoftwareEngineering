@@ -397,13 +397,17 @@ public class TextBuddy {
 	private static String searchText(String searchWord) throws IOException {
 		List<String> textList = retrieveAllTexts();
 		List<String> searchResultList = new ArrayList<String>();
+		
+		if(searchWord == null) {
+			return ERROR_NULL_SEARCH_INPUT;
+		} else {
+			int numberOfTexts = textList.size();
 
-		int numberOfTexts = textList.size();
-
-		for(int i = 0; i < numberOfTexts; i++) {
-			String text = textList.get(i);
-			if(text.contains(searchWord)) {
-				searchResultList.add(text);
+			for(int i = 0; i < numberOfTexts; i++) {
+				String text = textList.get(i);
+				if(text.contains(searchWord)) {
+					searchResultList.add(text);
+				}
 			}
 		}
 
