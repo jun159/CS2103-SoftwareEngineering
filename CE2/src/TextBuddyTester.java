@@ -53,4 +53,17 @@ public class TextBuddyTester {
 				+ TEXT_4 + "5. " + TEXT_1, TextBuddy.executeCommand(COMMAND_DISPLAY, null));
 		TextBuddy.clearText();
 	}
+	
+	/*
+	 * ============================= SEARCHING ===============================
+	 * The methods below represents the testing operations for search command.
+	 * =======================================================================
+	 */
+	
+	@Test
+	public void testSearchNullInput() throws IOException {
+		assertEquals(TextBuddy.ERROR_NULL_SEARCH_INPUT, 
+				TextBuddy.executeCommand(COMMAND_SEARCH, null));
+		TextBuddy.clearText();
+	}
 }
