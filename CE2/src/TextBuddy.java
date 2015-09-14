@@ -94,16 +94,34 @@ public class TextBuddy {
 	 * ====================================================================
 	 */
 
+	/**
+	 * This operation sets the file name input by user
+	 * to the string variable INPUT_FILE_NAME.
+	 * 
+	 * @param fileName			File name input by the user.
+	 */
 	private static void setFileName(String fileName) {
 		INPUT_FILE_NAME = fileName;
 	}
 	
+	/**
+	 * This operation creates the file (file name is provided by the user)
+	 * if the file does not exist yet.
+	 * 
+	 * @param inputTextFile		File to be created.
+	 */
 	private static void createFile(File inputTextFile) throws IOException {
 		if(!inputTextFile.exists()) {
 			inputTextFile.createNewFile();
 		}
 	}
 
+	/**
+	 * This operation initialize all file objects for the text file. 
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 * @throws FileNotFoundException	 File not found.
+	 */
 	private static void initializeFile() 
 			throws IOException, FileNotFoundException {
 		
@@ -113,6 +131,12 @@ public class TextBuddy {
 		initializeWriter(textFile);
 	}
 
+	/**
+	 * This operation initialize all temporary file objects for the text file. 
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 * @throws FileNotFoundException	 File not found.
+	 */
 	private static void initializeTempFile() 
 			throws IOException, FileNotFoundException {
 		
@@ -121,6 +145,12 @@ public class TextBuddy {
 		initializeWriter(tempFile);
 	}
 
+	/**
+	 * This operation initialize all reader objects to read text to text file.
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 * @throws FileNotFoundException	 File not found.
+	 */
 	private static void initializeReader(File inputTextFile) 
 			throws IOException, FileNotFoundException {
 		
@@ -128,6 +158,12 @@ public class TextBuddy {
 		bufferedReader = new BufferedReader(textFileReader);
 	}
 
+	/**
+	 * This operation initialize all writer objects to read text to text file.
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 * @throws FileNotFoundException	 File not found.
+	 */
 	private static void initializeWriter(File inputTextFile) 
 			throws IOException, FileNotFoundException {
 		
@@ -135,17 +171,33 @@ public class TextBuddy {
 		bufferedWriter = new BufferedWriter(textFileWriter);
 	}
 
+	/**
+	 * This operation closes the readers after finished using.
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 */
 	private static void closeReader() throws IOException {
 		textFileReader.close();
 		bufferedReader.close();
 	}
 
+	/**
+	 * This operation flushes and closes the writers after finished using.
+	 * 
+	 * @throws IOException				 Input/Output operation failed.
+	 */
 	private static void closeWriter() throws IOException {
 		bufferedWriter.flush();
 		textFileWriter.close();
 		bufferedWriter.close();
 	}
 
+	/**
+	 * This operation deletes the older version of textFile and
+	 * rename the latest tempFile back to filename provided by the user.
+	 * 
+	 * @throws IOException				Input/Output operation failed.
+	 */
 	private static void deleteAndRenameFile() throws IOException {
 		if(!textFile.delete()) {
 			printMessage(ERROR_CANNOT_DELETE_FILE);
@@ -162,19 +214,10 @@ public class TextBuddy {
 	 * ====================================================================
 	 */
 
-	/**
-	 * This operation sets each text with an index.
-	 * 
-	 * @param index		Position of the text.
-	 */
 	private static void setTextIndex(int index) {
 		textIndex = index;
 	}
 
-	/**
-	 * This operation resets the text index to 1
-	 * after the text file is cleared.
-	 */
 	private static void resetTextIndex() {
 		textIndex = 1;
 	}
@@ -294,6 +337,13 @@ public class TextBuddy {
 		initializeWriter(textFile);
 	}
 
+
+	/**
+	 * This operation closes file writer and buffered writer
+	 * and exits the program.
+	 * 
+	 * @throws IOException		Input/Output operation failed.
+	 */
 	private static void exit() throws IOException {
 		closeWriter();
 		System.exit(0);
@@ -305,6 +355,14 @@ public class TextBuddy {
 	 * ====================================================================
 	 */
 
+
+	/**
+	 * 
+	 * This operation prints the welcome message 
+	 * and scan the command entered by user.
+	 * 
+	 * @throws IOException 		Input/Output operation failed.	
+	 */
 	private static void welcomeUser() throws IOException {
 		printMessage(String.format(MESSAGE_WELCOME, INPUT_FILE_NAME));
 		runUILoop();
