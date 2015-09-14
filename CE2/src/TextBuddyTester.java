@@ -39,4 +39,18 @@ public class TextBuddyTester {
 		TextBuddy.executeCommand(COMMAND_ADD, TEXT_4);
 		TextBuddy.executeCommand(COMMAND_ADD, TEXT_5);
 	}
+	
+	/*
+	 * ============================== SORTING ================================
+	 * The methods below represents the testing operations for sort command.
+	 * =======================================================================
+	 */
+	
+	@Test
+	public void testSortList() throws IOException {
+		TextBuddy.executeCommand(COMMAND_SORT, null);
+		assertEquals("1. " + TEXT_3 + "2. " + TEXT_5 + "3. " + TEXT_2 + "4. " 
+				+ TEXT_4 + "5. " + TEXT_1, TextBuddy.executeCommand(COMMAND_DISPLAY, null));
+		TextBuddy.clearText();
+	}
 }
