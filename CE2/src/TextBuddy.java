@@ -478,10 +478,14 @@ public class TextBuddy {
 	private static String printSearchResults(List<String> textList, String searchWord) {
 		String message = "";
 		int numberOfSearchResults = textList.size();
-
-		message += printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
-		for(int i = 1; i <= numberOfSearchResults; i++) {
-			message += printMessage(i + MESSAGE_DOT + textList.get(i - 1).trim());
+		
+		if(numberOfSearchResults == 0) {
+			message = printMessage(String.format(MESSAGE_SEARCH_IS_EMPTY, searchWord, INPUT_FILE_NAME));
+		} else {
+			message += printMessage(String.format(MESSAGE_SEARCH_TEXT, numberOfSearchResults, searchWord, INPUT_FILE_NAME));
+			for(int i = 1; i <= numberOfSearchResults; i++) {
+				message += printMessage(i + MESSAGE_DOT + textList.get(i - 1).trim());
+			}
 		}
 
 		return message;
