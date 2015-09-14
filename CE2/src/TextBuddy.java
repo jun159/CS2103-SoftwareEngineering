@@ -41,6 +41,8 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Formatter;
 
@@ -52,6 +54,8 @@ public class TextBuddy {
 	private static final String MESSAGE_ADD_TEXT = "added to %1$s: \"%2$s\"";
 	private static final String MESSAGE_DELETE_TEXT = "deleted from %1$s: \"%2$s\"";
 	private static final String MESSAGE_CLEAR_TEXT = "all content deleted from %1$s";
+	private static final String MESSAGE_SORT_TEXT = "%1$s content sorted in alphabetical order";
+	private static final String MESSAGE_SEARCH_TEXT = "%1$s results containing word \"%2$s\" found in %3$s";
 	private static final String MESSAGE_DOT = ". ";
 	private static final String MESSAGE_NEW_LINE = "\n";
 
@@ -62,11 +66,14 @@ public class TextBuddy {
 
 	private static final String TEMP_FILE_NAME = "tempfile.txt";
 	private static String INPUT_FILE_NAME;
+	
+	private static final int START_INDEX = 0;
+	private static final int START_INDEX_OF_TEXT = 3;
 
 	/* These are the possible command types */
 	enum COMMAND_TYPE {
-		COMMAND_ADD, COMMAND_DISPLAY, COMMAND_DELETE, 
-		COMMAND_CLEAR, COMMAND_EXIT, COMMAND_INVALID
+		COMMAND_ADD, COMMAND_DISPLAY, COMMAND_DELETE, COMMAND_CLEAR, 
+		COMMAND_SORT, COMMAND_SEARCH, COMMAND_EXIT, COMMAND_INVALID
 	};
 
 	/* This scanner will be used for the whole class. */
@@ -241,7 +248,7 @@ public class TextBuddy {
 
 			switch(commandType) {
 				case COMMAND_ADD : 
-					addText(scanner.nextLine().trim()); 
+					addText(scanner.nextLine().trim(), true); 
 					break;
 				case COMMAND_DISPLAY : 
 					displayText(); 
@@ -251,6 +258,12 @@ public class TextBuddy {
 					break;
 				case COMMAND_CLEAR : 
 					clearText(); 
+					break;
+				case COMMAND_SORT:
+					sortText();
+					break;
+				case COMMAND_SEARCH:
+					searchText(scanner.next().trim());
 					break;
 				case COMMAND_EXIT : 
 					exit();
@@ -281,6 +294,10 @@ public class TextBuddy {
 			return COMMAND_TYPE.COMMAND_DELETE;
 		} else if (commandTypeString.equals("clear")) {
 			return COMMAND_TYPE.COMMAND_CLEAR;
+		} else if (commandTypeString.equals("sort")) {
+			return COMMAND_TYPE.COMMAND_SORT;
+		} else if (commandTypeString.equals("search")) {
+			return COMMAND_TYPE.COMMAND_SEARCH;
 		} else if (commandTypeString.equalsIgnoreCase("exit")) {
 			return COMMAND_TYPE.COMMAND_EXIT;
 		} else {
@@ -288,10 +305,10 @@ public class TextBuddy {
 		}
 	}
 
-	private static void addText(String inputText) throws IOException {
+	private static void addText(String inputText, boolean isPrintMessage) throws IOException {
 		bufferedWriter.write(textIndex + MESSAGE_DOT + inputText + MESSAGE_NEW_LINE);
 		bufferedWriter.flush();
-		printMessage(String.format(MESSAGE_ADD_TEXT, INPUT_FILE_NAME, inputText));
+		if(isPrintMessage) printMessage(String.format(MESSAGE_ADD_TEXT, INPUT_FILE_NAME, inputText));
 		setTextIndex(textIndex + 1);
 	}
 
@@ -315,14 +332,14 @@ public class TextBuddy {
 		String currentText;
 
 		while((currentText = bufferedReader.readLine()) != null) {
-			String currentIndex = (currentText.split(" ") [0]).trim();
+			String currentIndex = (currentText.split(" ") [START_INDEX]).trim();
 
 			if(currentIndex.equals(index)) {
 				printMessage(String.format(MESSAGE_DELETE_TEXT, 
-						INPUT_FILE_NAME, currentText.substring(3)));
+						INPUT_FILE_NAME, currentText.substring(START_INDEX_OF_TEXT)));
 			} else {
 				bufferedWriter.write(textIndex + MESSAGE_DOT + 
-						currentText.substring(3) + MESSAGE_NEW_LINE);
+						currentText.substring(START_INDEX_OF_TEXT) + MESSAGE_NEW_LINE);
 				setTextIndex(textIndex + 1);
 				bufferedWriter.flush();
 			}
@@ -336,7 +353,38 @@ public class TextBuddy {
 		resetTextIndex();
 		initializeWriter(textFile);
 	}
+	
+	private static void sortText() throws IOException {
+		List<String> textList = retrieveAllTexts();
+		Collections.sort(textList);
+		
+		// Clear file before adding sorted texts
+		initializeWriter(textFile);
+		resetTextIndex();
+		
+		for(String text : textList) {
+			addText(text, false);
+		}
 
+		printMessage(String.format(MESSAGE_SORT_TEXT, INPUT_FILE_NAME));
+	}
+	
+	private static List<String> retrieveAllTexts() throws IOException {
+		List<String> textList = new ArrayList<String>();
+		String currentText;
+		
+		initializeReader(textFile);
+		
+		while((currentText = bufferedReader.readLine()) != null) {
+			textList.add(currentText.substring(START_INDEX_OF_TEXT));
+		}
+		
+		return textList;
+	}
+	
+	private static void searchText(String search) throws IOException {
+		printMessage(String.format(MESSAGE_SEARCH_TEXT, INPUT_FILE_NAME));
+	}
 
 	/**
 	 * This operation closes file writer and buffered writer
@@ -346,7 +394,7 @@ public class TextBuddy {
 	 */
 	private static void exit() throws IOException {
 		closeWriter();
-		System.exit(0);
+		System.exit(START_INDEX);
 	}
 
 	/*
@@ -373,7 +421,7 @@ public class TextBuddy {
 	}
 
 	public static void main(String[] args) throws IOException {
-		setFileName(args[0]);
+		setFileName(args[START_INDEX]);
 		initializeFile();
 		welcomeUser();
 	}
