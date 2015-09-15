@@ -12,20 +12,18 @@ import java.util.List;
 
 public class Storage {
 
-	public static String INPUT_FILE_NAME;
+	private static String INPUT_FILE_NAME;
 	
-	public static File textFile;
-	public static File tempFile;
+	private static File textFile;
+	private static File tempFile;
 
-	public static FileReader textFileReader;
-	public static BufferedReader bufferedReader;
+	private static FileReader textFileReader;
+	private static BufferedReader bufferedReader;
 
-	public static FileWriter textFileWriter;
-	public static BufferedWriter bufferedWriter;
+	private static FileWriter textFileWriter;
+	private static BufferedWriter bufferedWriter;
 	
-	private Logic logic;
-	
-	public Storage() throws IOException { }
+	public Storage() { }
 	
 	/**
 	 * This operation creates the file (file name is provided by the user)
@@ -122,13 +120,8 @@ public class Storage {
 	 * @throws IOException				Input/Output operation failed.
 	 */
 	private void deleteAndRenameFile() throws IOException {
-		if (!textFile.delete()) {
-			logic.printMessage(Constant.ERROR_CANNOT_DELETE_FILE);
-		} 
-
-		if (!tempFile.renameTo(textFile)) {
-			logic.printMessage(Constant.ERROR_CANNOT_RENAME_FILE);
-		}
+		textFile.delete();
+		tempFile.renameTo(textFile);
 	}
 	
 	public void setFileName(String fileName) {
