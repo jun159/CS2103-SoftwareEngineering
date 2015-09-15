@@ -25,10 +25,13 @@ public class Constant {
 	public static final String TEMP_FILE_NAME = "tempfile.txt";
 	
 	public static final String COMMAND_ADD = "add";
+	public static final String COMMAND_DELETE = "delete";
+	public static final String COMMAND_CLEAR = "clear";
 	public static final String COMMAND_DISPLAY = "display";
 	public static final String COMMAND_SORT = "sort";
 	public static final String COMMAND_SEARCH = "search";
 	
+	public static final String INDEX_TO_DELETE = "2";
 	public static final String SEARCH_WORD = "East";
 	
 	public static final String TEXT_1 = "Potong Pasir";

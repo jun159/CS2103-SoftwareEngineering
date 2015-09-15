@@ -138,9 +138,8 @@ public class Storage {
 	}
 	
 	public void addTextToFile(String inputText) throws IOException {
-		bufferedWriter.write("1" + Constant.MESSAGE_DOT + inputText + Constant.MESSAGE_NEW_LINE);
+		bufferedWriter.write((retrieveAllTexts().size() + 1) + Constant.MESSAGE_DOT + inputText + Constant.MESSAGE_NEW_LINE);
 		bufferedWriter.flush();
-		//setTextIndex(++textIndex);
 	}
 
 	public String displayTextFromFile() throws IOException {
@@ -163,7 +162,7 @@ public class Storage {
 		String message = "";
 		
 		initializeTempFile();
-		int textIndex = 0;
+		int textIndex = 1;
 
 		String currentText;
 

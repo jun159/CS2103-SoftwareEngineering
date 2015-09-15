@@ -54,21 +54,21 @@ public class Logic {
 	public String addText(String inputText, boolean isPrintMessage) throws IOException {
 		storage.addTextToFile(inputText);
 		if (isPrintMessage) return printMessage(String.format(Constant.MESSAGE_ADD_TEXT, 
-				storage.getFileName(), inputText));
+				storage.getFileName(), inputText).trim());
 		return "";
 	}
 
 	public String displayText() throws IOException {
-		return printMessage(storage.displayTextFromFile());
+		return printMessage(storage.displayTextFromFile().trim());
 	}
 
 	public String deleteText(String index) throws IOException {
-		return printMessage(storage.deleteTextFromFile(index));
+		return printMessage(storage.deleteTextFromFile(index).trim());
 	}
 
 	public String clearText() throws IOException {
 		storage.clearTextFromFile();
-		return printMessage(String.format(Constant.MESSAGE_CLEAR_TEXT, storage.getFileName()));
+		return printMessage(String.format(Constant.MESSAGE_CLEAR_TEXT, storage.getFileName()).trim());
 	}
 	
 	public String sortText() throws IOException {
@@ -82,7 +82,7 @@ public class Logic {
 			addText(text, false);
 		}
 
-		return printMessage(String.format(Constant.MESSAGE_SORT_TEXT, storage.getFileName()));
+		return printMessage(String.format(Constant.MESSAGE_SORT_TEXT, storage.getFileName()).trim());
 	}
 	
 	public String searchText(String searchWord) throws IOException {
