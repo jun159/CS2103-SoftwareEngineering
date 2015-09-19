@@ -45,30 +45,6 @@ public class TextBuddyTester {
 	}
 	
 	/*
-	 * ============================== DELETION ===============================
-	 * The methods below represents the testing operations for add command.
-	 * =======================================================================
-	 */
-	
-	@Test
-	public void testDelete() throws IOException {
-		assertEquals(String.format(Constant.MESSAGE_DELETE_TEXT, Constant.INPUT_FILE_NAME, 
-				Constant.TEXT_2), parser.executeCommand(Constant.COMMAND_DELETE, Constant.INDEX_TO_DELETE));
-	}
-	
-	/*
-	 * ================================= CLEAR ===============================
-	 * The methods below represents the testing operations for add command.
-	 * =======================================================================
-	 */
-	
-	@Test
-	public void testClear() throws IOException {
-		assertEquals(String.format(Constant.MESSAGE_CLEAR_TEXT, Constant.INPUT_FILE_NAME), 
-				parser.executeCommand(Constant.COMMAND_CLEAR, null));
-	}
-	
-	/*
 	 * ============================== SORTING ================================
 	 * The methods below represents the testing operations for sort command.
 	 * =======================================================================

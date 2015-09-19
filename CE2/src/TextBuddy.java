@@ -45,7 +45,10 @@ public class TextBuddy {
 	
 	public static void main(String[] args) throws IOException {
 		Logic logic = new Logic();
-		logic.startUp("textfile.txt");
-		//logic.startUp(checkFile(args[Constant.START_INDEX]));
+		try {
+			logic.startUp(args[Constant.START_INDEX]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			logic.startUp(Constant.INPUT_FILE_NAME);
+		}
 	}
 }
