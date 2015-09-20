@@ -1,35 +1,46 @@
 package Storage;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.json.JSONException;
 
 import Task.Task;
 
 public class Storage {
-	private static ArrayList<Task> storageStub;
+	
+	private static ArrayList<Task> taskList;
 	private static ArrayList<String> categoryList;
+	
+	private StorageFile storageFile;
+	private StorageJSON storageJSON;
 
-	public Storage (String filename) {
-		storageStub = new ArrayList<Task>();
+	public Storage (String fileName) throws FileNotFoundException, IOException {
+		taskList = new ArrayList<Task>();
 		categoryList = new ArrayList<String>();
+		storageFile = new StorageFile(fileName);
+		storageJSON = new StorageJSON();
 	}
 
 	public void addFloatingTask(String taskName, String taskDescription, int priority, long reminder,
-			String category, boolean done) {
+			String category, boolean done) throws IOException, JSONException {
 		Task newFloatingTask = new Task(taskName, taskDescription, priority, reminder, category, done);
-		storageStub.add(newFloatingTask);
+		taskList.add(newFloatingTask);
+		storageFile.addTaskToFile(storageJSON.setTaskToJSON(newFloatingTask));
 	}
 	
 	public void addTask(String taskName, String taskDescription, String deadline, long endTime, int priority, 
 			int reminder, String category, boolean done) {
 		Task newTask = new Task(taskName, taskDescription, deadline, endTime, priority, reminder, category, done);
-		storageStub.add(newTask);
+		taskList.add(newTask);
 	}
 
 	public void addEvent(String eventName, String eventDescription, String startDate, String endDate, long startDateMilliseconds,
 			long endDateMilliseconds, int priority, long reminder, String category) {
 		Task newEvent = new Task(eventName, eventDescription, startDate, endDate, startDateMilliseconds,
 				endDateMilliseconds, priority, reminder, category);
-		storageStub.add(newEvent);
+		taskList.add(newEvent);
 	}
 
 	public void setUndone(String taskID) {

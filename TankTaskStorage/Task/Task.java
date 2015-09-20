@@ -1,9 +1,13 @@
 package Task;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Task {
 	
 	private String name;
-	private String category;
+	private String categoryName;
 	private String description;
     private String startDate;
     private String endDate;
@@ -14,14 +18,15 @@ public class Task {
     
 	private int priority;
     
-    private boolean done;
+    private boolean isDone;
     
     public Task() {
     	
     }
     
     // Floating task
-    public Task(String taskName, String taskDescription, int priority, long reminder, String category, boolean done) {
+    public Task(String taskName, String taskDescription, int priority, long reminder, 
+    		String categoryName, boolean isDone) {
     	setName(taskName);
 		setDescription(taskDescription);
 		setStartDate("-1");
@@ -30,13 +35,13 @@ public class Task {
 		setEndTime(-1);
 		setPriority(priority);
 		setReminder(reminder);
-		setCategory(category);
-		setDone(done);
+		setCategoryName(categoryName);
+		setDone(isDone);
 	}
     
     // Task
 	public Task(String taskName, String taskDescription, String deadline, long endTime, int priority, 
-			int reminder, String category, boolean done) {
+			int reminder, String categoryName, boolean isDone) {
 		setName(taskName);
 		setDescription(taskDescription);
 		setStartDate("-1");
@@ -45,13 +50,13 @@ public class Task {
 		setEndTime(-1);
 		setPriority(priority);
 		setReminder(reminder);
-		setCategory(category);
-		setDone(done);
+		setCategoryName(categoryName);
+		setDone(isDone);
 	}
 
 	// Event
 	public Task(String eventName, String eventDescription, String startDate, String endDate, long startTime,
-			long endTime, int priority, long reminder, String category) {
+			long endTime, int priority, long reminder, String categoryName) {
 		setName(eventName);
 		setDescription(eventDescription);
 		setStartDate(startDate);
@@ -60,7 +65,7 @@ public class Task {
 		setEndTime(endTime);
 		setPriority(priority);
 		setReminder(reminder);
-		setCategory(category);
+		setCategoryName(categoryName);
 	}
 
 	public int getPriority() {
@@ -71,12 +76,12 @@ public class Task {
     	this.priority = priority;
     }
     
-    public boolean isDone() {
-    	return done;
+    public boolean getDone() {
+    	return isDone;
     }
     
-    public void setDone(boolean done) {
-    	this.done = done;
+    public void setDone(boolean isDone) {
+    	this.isDone = isDone;
     }
     
     public String getName() {
@@ -135,12 +140,12 @@ public class Task {
     	this.reminder = reminder;
     }
     
-    public String getCategory() {
-    	return category;
+    public String getCategoryName() {
+    	return categoryName;
     }
     
-    public void setCategory(String category) {
-    	this.category = category;
+    public void setCategoryName(String categoryName) {
+    	this.categoryName = categoryName;
     }
     
     public String toString() {
