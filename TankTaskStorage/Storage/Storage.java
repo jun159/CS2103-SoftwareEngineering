@@ -5,23 +5,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.JSONException;
+import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import Task.Task;
+import Task.CategoryWrapper;
+import TaskTask.Task;
 
 public class Storage {
-	
-	private static ArrayList<Task> taskList;
-	private static ArrayList<String> categoryList;
 	
 	private StorageFile storageFile;
 	private StorageJSON storageJSON;
 
 	public Storage (String fileName) throws FileNotFoundException, IOException {
-		taskList = new ArrayList<Task>();
-		categoryList = new ArrayList<String>();
 		storageFile = new StorageFile(fileName);
 		storageJSON = new StorageJSON();
 	}
@@ -29,23 +26,26 @@ public class Storage {
 	public void addFloatingTask(String taskName, String taskDescription, int priority, long reminder,
 			String category, boolean done) throws IOException, JSONException {
 		Task newFloatingTask = new Task(taskName, taskDescription, priority, reminder, category, done);
-		taskList.add(newFloatingTask);
-		storageFile.addTaskToFile(storageJSON.formatTaskToJSON(newFloatingTask));
+		storageFile.addTaskToFile(storageJSON.convertTaskToJSON(newFloatingTask).toJSONString());
 	}
 	
 	public void addTask(String taskName, String taskDescription, String deadline, long endTime, int priority, 
-			int reminder, String category, boolean done) {
+			int reminder, String category, boolean done) throws IOException, JSONException {	
 		Task newTask = new Task(taskName, taskDescription, deadline, endTime, priority, reminder, category, done);
-		taskList.add(newTask);
+		storageFile.addTaskToFile(storageJSON.convertTaskToJSON(newTask).toJSONString());
 	}
 
 	public void addEvent(String eventName, String eventDescription, String startDate, String endDate, long startDateMilliseconds,
-			long endDateMilliseconds, int priority, long reminder, String category) {
+			long endDateMilliseconds, int priority, long reminder, String category) throws IOException, JSONException {
 		Task newEvent = new Task(eventName, eventDescription, startDate, endDate, startDateMilliseconds,
 				endDateMilliseconds, priority, reminder, category);
-		taskList.add(newEvent);
+		storageFile.addTaskToFile(storageJSON.convertTaskToJSON(newEvent).toJSONString());
 	}
-
+	
+	public void addCat() throws IOException, JSONException {
+		storageFile.addCatTaskToFile(storageJSON.addNewCategory("category"));
+	}
+	
 	public void setUndone(String taskID) {
 		// TODO Auto-generated method stub
 		
@@ -116,13 +116,14 @@ public class Storage {
 		
 	}
 
-	public ArrayList<Task> getTasks() throws JsonParseException, JsonMappingException, JSONException, IOException {
-		return storageJSON.getAllTasksFromFile();
+	public ArrayList<CategoryWrapper> getCategories(String jsonString)
+			throws JsonParseException, JsonMappingException, JSONException, IOException {
+		return storageJSON.getAllTasksFromFile(jsonString);
 	}
 
-	public ArrayList<Task> getFloatingTasks() {
+	public void getFloatingTasks() throws ParseException, IOException {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	public ArrayList<Task> getEvents() {

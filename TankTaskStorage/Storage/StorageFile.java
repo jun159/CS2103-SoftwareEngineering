@@ -14,8 +14,14 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
 
-import Task.Task;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import TaskTask.Task;
 
 /**
  * Add JSON objects into file
@@ -41,11 +47,13 @@ public class StorageFile {
 	private FileWriter textFileWriter;
 	private BufferedWriter bufferedWriter;
 	
-	public StorageFile() throws FileNotFoundException, IOException { 
+	public StorageFile() 
+			throws FileNotFoundException, IOException { 
 		initializeFile();
 	}
 	
-	public StorageFile(String fileName) throws FileNotFoundException, IOException {
+	public StorageFile(String fileName) 
+			throws FileNotFoundException, IOException {
 		setFileName(fileName);
 		initializeFile();
 	}
@@ -155,10 +163,18 @@ public class StorageFile {
 		return textFile;
 	}
 	
-	public void addTaskToFile(JSONObject jsonObject) throws IOException, JSONException {
-		bufferedWriter.write(jsonObject.toString(4));
+	public void addTaskToFile(String jsonString) throws IOException, JSONException {
+		JSONObject jsonObject = new JSONObject(jsonString);
+		bufferedWriter.write(jsonObject.toString(3));
 		bufferedWriter.flush();
 		System.out.println(jsonObject);
+	}
+	
+	public void addCatTaskToFile(JSONArray jsonArray) throws IOException, JSONException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);	
+		bufferedWriter.write(mapper.writeValueAsString(jsonArray));
+		bufferedWriter.flush();
 	}
 
 	/*

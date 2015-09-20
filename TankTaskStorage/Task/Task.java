@@ -3,7 +3,6 @@ package Task;
 public class Task {
 	
 	private String name;
-	private String categoryName;
 	private String description;
     private String startDate;
     private String endDate;
@@ -18,8 +17,8 @@ public class Task {
     }
     
     // Floating task
-    public Task(String taskName, String taskDescription, int priority, long reminder, 
-    		String categoryName, boolean isDone) {
+    public Task(String taskName, String taskDescription, int priority, 
+    		long reminder, boolean isDone) {
     	setName(taskName);
 		setDescription(taskDescription);
 		setStartDate("-1");
@@ -28,13 +27,12 @@ public class Task {
 		setEndTime(-1);
 		setPriority(priority);
 		setReminder(reminder);
-		setCategoryName(categoryName);
 		setDone(isDone);
 	}
     
     // Task
-	public Task(String taskName, String taskDescription, String deadline, long endTime, int priority, 
-			int reminder, String categoryName, boolean isDone) {
+	public Task(String taskName, String taskDescription, String deadline, long endTime, 
+			int priority, int reminder, boolean isDone) {
 		setName(taskName);
 		setDescription(taskDescription);
 		setStartDate("-1");
@@ -43,13 +41,12 @@ public class Task {
 		setEndTime(-1);
 		setPriority(priority);
 		setReminder(reminder);
-		setCategoryName(categoryName);
 		setDone(isDone);
 	}
 
 	// Event
-	public Task(String eventName, String eventDescription, String startDate, String endDate, long startTime,
-			long endTime, int priority, long reminder, String categoryName) {
+	public Task(String eventName, String eventDescription, String startDate, String endDate, 
+			long startTime, long endTime, int priority, long reminder) {
 		setName(eventName);
 		setDescription(eventDescription);
 		setStartDate(startDate);
@@ -58,7 +55,6 @@ public class Task {
 		setEndTime(endTime);
 		setPriority(priority);
 		setReminder(reminder);
-		setCategoryName(categoryName);
 	}
 
 	public int getPriority() {
@@ -131,14 +127,6 @@ public class Task {
     
     public void setReminder(long reminder) {
     	this.reminder = reminder;
-    }
-    
-    public String getCategoryName() {
-    	return categoryName;
-    }
-    
-    public void setCategoryName(String categoryName) {
-    	this.categoryName = categoryName;
     }
     
     public String toString() {
