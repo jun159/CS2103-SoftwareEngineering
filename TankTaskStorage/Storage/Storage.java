@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import Task.Task;
 
 public class Storage {
@@ -27,7 +30,7 @@ public class Storage {
 			String category, boolean done) throws IOException, JSONException {
 		Task newFloatingTask = new Task(taskName, taskDescription, priority, reminder, category, done);
 		taskList.add(newFloatingTask);
-		storageFile.addTaskToFile(storageJSON.setTaskToJSON(newFloatingTask));
+		storageFile.addTaskToFile(storageJSON.formatTaskToJSON(newFloatingTask));
 	}
 	
 	public void addTask(String taskName, String taskDescription, String deadline, long endTime, int priority, 
@@ -113,9 +116,8 @@ public class Storage {
 		
 	}
 
-	public ArrayList<Task> getTasks() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Task> getTasks() throws JsonParseException, JsonMappingException, JSONException, IOException {
+		return storageJSON.getAllTasksFromFile();
 	}
 
 	public ArrayList<Task> getFloatingTasks() {

@@ -1,5 +1,9 @@
 package Storage;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * Converts Task object to JSON or vice versa.
  * 
@@ -11,36 +15,42 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import Task.Subtask;
 import Task.Task;
 
 public class StorageJSON {
 	
-	private Task newTask;
+	private StorageFile storage;
+	private JSONObject task;
 	
-   	private JSONObject task;
+	private JSONArray categoryList;
 	private JSONArray taskList;
 
-	public StorageJSON() { 
+	public StorageJSON() throws FileNotFoundException, IOException { 
+		storage = new StorageFile();
 		task = new JSONObject();
 		taskList = new JSONArray();
 	}
 	
-    /*
 	// Retrieves all tasks from file
-    public void getAllTasksFromFile() throws JSONException {
-    	int size = allTargetTasks.size();
+    public ArrayList<Task> getAllTasksFromFile() throws JSONException, JsonParseException, JsonMappingException, IOException {
+    	ArrayList<Task> allTasks = new ArrayList<Task>();
     	
-    	for(int i = 0; i < size; i++) {
-    		taskList.put(setTask(allTargetTasks.get(i)));
-    	}
+    	ObjectMapper mapper = new ObjectMapper();
     	
-    	taskList.put(newTask);
+    	Task task = null;
+    	task = mapper.readValue(storage.getFile(), Task.class);
+    	allTasks.add(task);
+
+    	return allTasks;
     }
-    */
     
     // Add new task into file
-    public JSONObject setTaskToJSON(Task targetTask) throws JSONException {
+    public JSONObject formatTaskToJSON(Task targetTask) throws JSONException {
     	task.put("name", targetTask.getName());
     	task.put("description", targetTask.getDescription());
     	task.put("startDate", targetTask.getStartDate());

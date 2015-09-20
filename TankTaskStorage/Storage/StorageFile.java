@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import Task.Task;
@@ -41,7 +42,7 @@ public class StorageFile {
 	private BufferedWriter bufferedWriter;
 	
 	public StorageFile() throws FileNotFoundException, IOException { 
-		this(DEFAULT_FILE_NAME);
+		initializeFile();
 	}
 	
 	public StorageFile(String fileName) throws FileNotFoundException, IOException {
@@ -149,9 +150,13 @@ public class StorageFile {
 	public String getFileName() {
 		return INPUT_FILE_NAME;
 	}
+
+	public File getFile() {
+		return textFile;
+	}
 	
-	public void addTaskToFile(JSONObject jsonObject) throws IOException {
-		bufferedWriter.write(jsonObject.toString());
+	public void addTaskToFile(JSONObject jsonObject) throws IOException, JSONException {
+		bufferedWriter.write(jsonObject.toString(4));
 		bufferedWriter.flush();
 		System.out.println(jsonObject);
 	}

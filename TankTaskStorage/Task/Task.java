@@ -1,9 +1,5 @@
 package Task;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class Task {
 	
 	private String name;
@@ -11,13 +7,10 @@ public class Task {
 	private String description;
     private String startDate;
     private String endDate;
-    
     private long startTime;
     private long endTime;
     private long reminder;
-    
 	private int priority;
-    
     private boolean isDone;
     
     public Task() {
@@ -150,15 +143,15 @@ public class Task {
     
     public String toString() {
     	StringBuilder sb = new StringBuilder();
-    	sb.append(name+System.getProperty("line.separator"));
-    	sb.append(description+System.getProperty("line.separator"));
-    	sb.append(startDate+System.getProperty("line.separator"));
-    	sb.append(endDate+System.getProperty("line.separator"));
-    	sb.append(startTime+System.getProperty("line.separator"));
-    	sb.append(endTime+System.getProperty("line.separator"));
-    	sb.append(reminder+System.getProperty("line.separator"));
-    	sb.append(priority+System.getProperty("line.separator"));
-    	sb.append(done+System.getProperty("line.separator"));
+    	sb.append(name + System.getProperty("line.separator"));
+    	sb.append(description + System.getProperty("line.separator"));
+    	sb.append(startDate + System.getProperty("line.separator"));
+    	sb.append(endDate + System.getProperty("line.separator"));
+    	sb.append(startTime + System.getProperty("line.separator"));
+    	sb.append(endTime + System.getProperty("line.separator"));
+    	sb.append(reminder + System.getProperty("line.separator"));
+    	sb.append(priority + System.getProperty("line.separator"));
+    	sb.append(isDone + System.getProperty("line.separator"));
     	return sb.toString();
     }
 }
