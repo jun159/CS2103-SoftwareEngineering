@@ -1,47 +1,47 @@
 package Tasks;
 
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class Category {
 	
 	/* The following represents the list of task types */
-	private ArrayList<Task> task;
-	private ArrayList<Task> floatTask;
-	private ArrayList<Task> event;
+	private TreeSet<Task> task;
+	private TreeSet<Task> floatTask;
+	private TreeSet<Task> event;
 	
 	public Category() {
-		setTask(new ArrayList<Task> ());
-		setFloatTask(new ArrayList<Task> ());
-		setEvent(new ArrayList<Task> ());
+		setTask(new TreeSet<Task> ());
+		setFloatTask(new TreeSet<Task> ());
+		setEvent(new TreeSet<Task> ());
 	}
 	
-	public Category(ArrayList<Task> task, ArrayList<Task> floatTask, ArrayList<Task> event) {
+	public Category(TreeSet<Task> task, TreeSet<Task> floatTask, TreeSet<Task> event) {
 		setTask(task);
 		setFloatTask(floatTask);
 		setEvent(event);
 	}
 	
-	public ArrayList<Task> getTask() {
+	public TreeSet<Task> getTask() {
 		return task;
 	}
 	
-	public void setTask(ArrayList<Task> arrayList) {
-		this.task = arrayList;
+	public void setTask(TreeSet<Task> TreeSet) {
+		this.task = TreeSet;
 	}
 	
-	public ArrayList<Task> getFloatTask() {
+	public TreeSet<Task> getFloatTask() {
 		return floatTask;
 	}
 	
-	public void setFloatTask(ArrayList<Task> floatTask) {
+	public void setFloatTask(TreeSet<Task> floatTask) {
 		this.floatTask = floatTask;
 	}
 	
-	public ArrayList<Task> getEvent() {
+	public TreeSet<Task> getEvent() {
 		return event;
 	}
 	
-	public void setEvent(ArrayList<Task> event) {
+	public void setEvent(TreeSet<Task> event) {
 		this.event = event;
 	}
 }

@@ -1,6 +1,6 @@
 package Tasks;
 
-public class Task {
+public class Task implements Comparable<Task> {
 	
 	private String name;
 	private String description;
@@ -142,4 +142,16 @@ public class Task {
     	sb.append(isDone + System.getProperty("line.separator"));
     	return sb.toString();
     }
+
+	@Override
+	public int compareTo(Task right) {
+		
+		if(this.getName().compareTo(right.getName()) < 0) {
+			return -1;
+		} else if(this.getName().compareTo(right.getName()) > 0) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }

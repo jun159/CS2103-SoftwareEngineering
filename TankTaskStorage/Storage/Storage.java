@@ -49,18 +49,18 @@ public class Storage {
 	}
 	
 	// TODO: I should expect category and name of task instead of taskID (Logic)
-	public void setUndone(String categoryName, String taskType, String taskName) {
-		
+	public void setUndone(String categoryName, String taskType, String taskName) 
+			throws JsonParseException, JsonMappingException, JSONException, IOException {
+		storageJSON.setDone(categoryName, taskType, taskName, false);
 	}
 
-	public void setDone(String taskID) {
-		// TODO Auto-generated method stub
-		
+	public void setDone(String categoryName, String taskType, String taskName) 
+			throws JsonParseException, JsonMappingException, IOException {
+		storageJSON.setDone(categoryName, taskType, taskName, true);
 	}
 
 	public void setColour(String categoryName, String colourId) {
-		// TODO Auto-generated method stub
-		
+		//storageJSON.setColour(categoryName, categoryName, colourId);
 	}
 
 	public ArrayList<String> getCategoryList() {
