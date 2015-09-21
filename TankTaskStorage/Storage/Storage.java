@@ -3,7 +3,6 @@ package Storage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.simple.parser.ParseException;
@@ -24,65 +23,28 @@ public class Storage {
 	private StorageJSON storageJSON;
 	private StorageFile storageFile;
 
-	public Storage (String fileName) throws FileNotFoundException, IOException {
+	public Storage () throws FileNotFoundException, IOException {
 		storageJSON = new StorageJSON();
-		storageFile = new StorageFile(fileName);
-	}
-	
-	/**
-	 *  Checks if category exist
-	 * @param categoryName
-	 * @return
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws JSONException
-	 * @throws IOException
-	 */
-	private boolean isCategoryExist(String categoryName) 
-			throws JsonParseException, JsonMappingException, JSONException, IOException {
-		List<CategoryWrapper> allCategories = getAllCategories();
-		int size = allCategories.size();
-		
-		for(int i = 0; i < size; i++) {
-			if(allCategories.get(i).getCategoryName().equals(categoryName))
-				return true;
-		}
-		
-		return false;
+		storageFile = new StorageFile();
 	}
 
 	public void addFloatingTask(String taskName, String taskDescription, int priority, long reminder,
 			String category, boolean done) throws IOException, JSONException {
 		Task newFloatingTask = new Task(taskName, taskDescription, priority, reminder, done);
-		
-		if(!isCategoryExist(category)) {
-			storageJSON.addNewCategory(category, TYPE_FLOAT, newFloatingTask);
-		} else {
-			storageFile.addCatTaskToFile(storageJSON.addNewTask(category, TYPE_FLOAT, newFloatingTask));
-		}
+		storageJSON.addNewCategory(category, TYPE_FLOAT, newFloatingTask);
 	}
 	
 	public void addTask(String taskName, String taskDescription, String deadline, long endTime, int priority, 
 			int reminder, String category, boolean done) throws IOException, JSONException {	
 		Task newTask = new Task(taskName, taskDescription, deadline, endTime, priority, reminder, done);
-		
-		if(!isCategoryExist(category)) {
-			storageJSON.addNewCategory(category, TYPE_TASK, newTask);
-		} else {
-			storageFile.addCatTaskToFile(storageJSON.addNewTask(category, TYPE_TASK, newTask));
-		}
+		storageJSON.addNewCategory(category, TYPE_TASK, newTask);
 	}
 
 	public void addEvent(String eventName, String eventDescription, String startDate, String endDate, long startDateMilliseconds,
 			long endDateMilliseconds, int priority, long reminder, String category) throws IOException, JSONException {
 		Task newEvent = new Task(eventName, eventDescription, startDate, endDate, startDateMilliseconds,
 				endDateMilliseconds, priority, reminder, category);
-		
-		if(!isCategoryExist(category)) {
-			storageJSON.addNewCategory(category, TYPE_EVENT, newEvent);
-		} else {
-			storageFile.addCatTaskToFile(storageJSON.addNewTask(category, TYPE_EVENT, newEvent));
-		}
+		storageJSON.addNewCategory(category, TYPE_EVENT, newEvent);
 	}
 	
 	public void setUndone(String taskID) {

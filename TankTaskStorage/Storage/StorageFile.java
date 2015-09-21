@@ -3,9 +3,7 @@ package Storage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,23 +11,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.gson.Gson;
 
-import Tasks.Task;
 import Tasks.CategoryWrapper;
 
 /**
@@ -45,8 +34,6 @@ public class StorageFile {
 	private static final String TEMP_FILE_NAME = "temp.txt";
 	private static String INPUT_FILE_NAME;
 	
-	private StorageJSON storageJSON;
-	
 	private File textFile;
 	private File tempFile;
 
@@ -56,8 +43,8 @@ public class StorageFile {
 	private FileWriter textFileWriter;
 	private BufferedWriter bufferedWriter;
 	
-	public StorageFile() { 
-		
+	public StorageFile() throws FileNotFoundException, IOException { 
+		this(DEFAULT_FILE_NAME);
 	}
 	
 	public StorageFile(String fileName) 
@@ -77,13 +64,13 @@ public class StorageFile {
 		
 		textFile = new File(INPUT_FILE_NAME);
 		createFile(textFile);
-		initializeReader(textFile);
-		initializeWriter(textFile);
 	}
 	
 	private void createFile(File file) throws IOException {
 		if(!file.exists()) {
 			file.createNewFile();
+			initializeReader(textFile);
+			initializeWriter(textFile);
 		}
 	}
 
@@ -194,31 +181,6 @@ public class StorageFile {
 		return textFile;
 	}
 	
-	// TODO: REDUNDANT
-	public void addTaskToFile(org.json.simple.JSONObject jsonObject2) throws IOException, JSONException {
-		JSONObject jsonObject = new JSONObject(jsonObject2);
-		bufferedWriter.write(jsonObject.toString(3));
-		bufferedWriter.flush();
-		System.out.println(jsonObject);
-	}
-	
-	public void addCatTaskToFile(JSONArray jsonArray) throws IOException, JSONException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);	
-		bufferedWriter.write(mapper.writeValueAsString(jsonArray));
-		bufferedWriter.flush();
-	}
-	
-	public ArrayList<CategoryWrapper> getAllCatFromFile() 
-			throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-		Gson gson = new Gson();
-		ArrayList<CategoryWrapper> allTasks = gson.fromJson(getAllTextsFromFile(), CategoryWrapper.class);
-		return allTasks;
-	}
-	
 	public ArrayList<CategoryWrapper> getAllCategoriesFromFile() 
 			throws JsonParseException, JsonMappingException, IOException {
 		
@@ -235,17 +197,20 @@ public class StorageFile {
 	
 	public void setAllCategoriesToFile(ArrayList<CategoryWrapper> categoryWrapper) 
 			throws JsonParseException, JsonMappingException, IOException {
-
+		clearTextFromFile();
+		
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		mapper.writeValue(textFile, categoryWrapper);
-
 		bufferedWriter.write(mapper.writeValueAsString(categoryWrapper));
 		bufferedWriter.flush();
 		System.out.println(mapper.writeValueAsString(categoryWrapper));
-
 	}
 	
-
+	public void clearTextFromFile() throws IOException {
+		initializeWriter(textFile);
+	}
+	
 	/*
 	public String displayTextFromFile() throws IOException {
 		String message = "";
@@ -288,10 +253,6 @@ public class StorageFile {
 		deleteAndRenameFile();
 		
 		return message;
-	}
-
-	public void clearTextFromFile() throws IOException {
-		initializeWriter(textFile);
 	}
 	
 	public List<String> retrieveAllTexts() throws IOException {

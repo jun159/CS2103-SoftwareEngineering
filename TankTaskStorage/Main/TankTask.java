@@ -19,7 +19,10 @@ import Tasks.Task;
 
 public class TankTask {
 	public static void main(String[] args) throws FileNotFoundException, IOException, JSONException, ParseException {
-		Storage storage = new Storage("hey.txt");
+		Storage storage = new Storage();
 		storage.addFloatingTask("Do homework", "Do it now", 5, 123, "School", false);
+		storage.addFloatingTask("Do homework", "Do it now", 5, 123, "School", false);
+		
+		storage.addEvent("Party time!", "Woohoo", "March", "July", 5, 10, 1, -1, "School");
 	}
 }
