@@ -9,6 +9,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +20,17 @@ import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.gson.Gson;
 
-import TaskTask.Task;
+import Tasks.Task;
+import Tasks.CategoryWrapper;
 
 /**
  * Add JSON objects into file
@@ -47,9 +56,8 @@ public class StorageFile {
 	private FileWriter textFileWriter;
 	private BufferedWriter bufferedWriter;
 	
-	public StorageFile() 
-			throws FileNotFoundException, IOException { 
-		initializeFile();
+	public StorageFile() { 
+		
 	}
 	
 	public StorageFile(String fileName) 
@@ -151,6 +159,29 @@ public class StorageFile {
 		tempFile.renameTo(textFile);
 	}
 	
+	/**
+	 * 
+	 */
+	public boolean isFileEmpty() throws IOException {    
+		initializeFile();
+		initializeReader(textFile);
+		
+		if (bufferedReader.readLine() == null) {
+		    return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * This operation retrieves all the texts from target file.
+	 * 
+	 * @throws IOException				Input/Output operation failed.
+	 */
+	private String getAllTextsFromFile() throws IOException {
+		return new String(Files.readAllBytes(Paths.get(INPUT_FILE_NAME)), StandardCharsets.UTF_8);
+	}
+	
 	public void setFileName(String fileName) {
 		INPUT_FILE_NAME = fileName;
 	}
@@ -163,8 +194,9 @@ public class StorageFile {
 		return textFile;
 	}
 	
-	public void addTaskToFile(String jsonString) throws IOException, JSONException {
-		JSONObject jsonObject = new JSONObject(jsonString);
+	// TODO: REDUNDANT
+	public void addTaskToFile(org.json.simple.JSONObject jsonObject2) throws IOException, JSONException {
+		JSONObject jsonObject = new JSONObject(jsonObject2);
 		bufferedWriter.write(jsonObject.toString(3));
 		bufferedWriter.flush();
 		System.out.println(jsonObject);
@@ -176,6 +208,43 @@ public class StorageFile {
 		bufferedWriter.write(mapper.writeValueAsString(jsonArray));
 		bufferedWriter.flush();
 	}
+	
+	public ArrayList<CategoryWrapper> getAllCatFromFile() 
+			throws JsonParseException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		Gson gson = new Gson();
+		ArrayList<CategoryWrapper> allTasks = gson.fromJson(getAllTextsFromFile(), CategoryWrapper.class);
+		return allTasks;
+	}
+	
+	public ArrayList<CategoryWrapper> getAllCategoriesFromFile() 
+			throws JsonParseException, JsonMappingException, IOException {
+		
+		if(isFileEmpty()) {
+			return new ArrayList<CategoryWrapper>();
+		} else {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			ArrayList<CategoryWrapper> allTasks = 
+					mapper.readValue(getAllTextsFromFile(), new TypeReference<ArrayList<CategoryWrapper>>() {});
+			return allTasks;
+		} 
+	}
+	
+	public void setAllCategoriesToFile(ArrayList<CategoryWrapper> categoryWrapper) 
+			throws JsonParseException, JsonMappingException, IOException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(textFile, categoryWrapper);
+
+		bufferedWriter.write(mapper.writeValueAsString(categoryWrapper));
+		bufferedWriter.flush();
+		System.out.println(mapper.writeValueAsString(categoryWrapper));
+
+	}
+	
 
 	/*
 	public String displayTextFromFile() throws IOException {

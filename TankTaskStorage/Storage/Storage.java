@@ -3,6 +3,7 @@ package Storage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.simple.parser.ParseException;
@@ -10,40 +11,78 @@ import org.json.simple.parser.ParseException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import Task.CategoryWrapper;
-import TaskTask.Task;
+import Tasks.Task;
+import Tasks.CategoryWrapper;
 
 public class Storage {
 	
-	private StorageFile storageFile;
+	/* The following represents the types of tasks */
+	private static final String TYPE_TASK = "task";
+	private static final String TYPE_FLOAT = "floatTask";
+	private static final String TYPE_EVENT = "event";
+	
 	private StorageJSON storageJSON;
+	private StorageFile storageFile;
 
 	public Storage (String fileName) throws FileNotFoundException, IOException {
-		storageFile = new StorageFile(fileName);
 		storageJSON = new StorageJSON();
+		storageFile = new StorageFile(fileName);
+	}
+	
+	/**
+	 *  Checks if category exist
+	 * @param categoryName
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	private boolean isCategoryExist(String categoryName) 
+			throws JsonParseException, JsonMappingException, JSONException, IOException {
+		List<CategoryWrapper> allCategories = getAllCategories();
+		int size = allCategories.size();
+		
+		for(int i = 0; i < size; i++) {
+			if(allCategories.get(i).getCategoryName().equals(categoryName))
+				return true;
+		}
+		
+		return false;
 	}
 
 	public void addFloatingTask(String taskName, String taskDescription, int priority, long reminder,
 			String category, boolean done) throws IOException, JSONException {
-		Task newFloatingTask = new Task(taskName, taskDescription, priority, reminder, category, done);
-		storageFile.addTaskToFile(storageJSON.convertTaskToJSON(newFloatingTask).toJSONString());
+		Task newFloatingTask = new Task(taskName, taskDescription, priority, reminder, done);
+		
+		if(!isCategoryExist(category)) {
+			storageJSON.addNewCategory(category, TYPE_FLOAT, newFloatingTask);
+		} else {
+			storageFile.addCatTaskToFile(storageJSON.addNewTask(category, TYPE_FLOAT, newFloatingTask));
+		}
 	}
 	
 	public void addTask(String taskName, String taskDescription, String deadline, long endTime, int priority, 
 			int reminder, String category, boolean done) throws IOException, JSONException {	
-		Task newTask = new Task(taskName, taskDescription, deadline, endTime, priority, reminder, category, done);
-		storageFile.addTaskToFile(storageJSON.convertTaskToJSON(newTask).toJSONString());
+		Task newTask = new Task(taskName, taskDescription, deadline, endTime, priority, reminder, done);
+		
+		if(!isCategoryExist(category)) {
+			storageJSON.addNewCategory(category, TYPE_TASK, newTask);
+		} else {
+			storageFile.addCatTaskToFile(storageJSON.addNewTask(category, TYPE_TASK, newTask));
+		}
 	}
 
 	public void addEvent(String eventName, String eventDescription, String startDate, String endDate, long startDateMilliseconds,
 			long endDateMilliseconds, int priority, long reminder, String category) throws IOException, JSONException {
 		Task newEvent = new Task(eventName, eventDescription, startDate, endDate, startDateMilliseconds,
 				endDateMilliseconds, priority, reminder, category);
-		storageFile.addTaskToFile(storageJSON.convertTaskToJSON(newEvent).toJSONString());
-	}
-	
-	public void addCat() throws IOException, JSONException {
-		storageFile.addCatTaskToFile(storageJSON.addNewCategory("category"));
+		
+		if(!isCategoryExist(category)) {
+			storageJSON.addNewCategory(category, TYPE_EVENT, newEvent);
+		} else {
+			storageFile.addCatTaskToFile(storageJSON.addNewTask(category, TYPE_EVENT, newEvent));
+		}
 	}
 	
 	public void setUndone(String taskID) {
@@ -116,9 +155,15 @@ public class Storage {
 		
 	}
 
-	public ArrayList<CategoryWrapper> getCategories(String jsonString)
+	public ArrayList<CategoryWrapper> getAllCategories()
 			throws JsonParseException, JsonMappingException, JSONException, IOException {
-		return storageJSON.getAllTasksFromFile(jsonString);
+		ArrayList<CategoryWrapper> allCategories = storageFile.getAllCategoriesFromFile();
+		
+		if(allCategories == null) {
+			return new ArrayList<CategoryWrapper> ();
+		} else {
+			return allCategories;
+		}
 	}
 
 	public void getFloatingTasks() throws ParseException, IOException {

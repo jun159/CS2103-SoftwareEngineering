@@ -1,26 +1,23 @@
 package Storage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
-import Task.CategoryWrapper;
-import TaskTask.Task;
+import Tasks.Category;
+import Tasks.CategoryWrapper;
+import Tasks.Task;
 
 public class StorageJSON {
-	
-	/* The following represents the types of tasks */
-	private static final String TYPE_TASK = "task";
-	private static final String TYPE_FLOAT = "floatTask";
-	private static final String TYPE_EVENT = "event";
 	
 	/* The following represents the key of each category attributes */
 	private static final String CATEGORY_KEY_NAME = "categoryName";
@@ -37,65 +34,31 @@ public class StorageJSON {
 	private static final String TASK_KEY_ISDONE = "isDone";
 	
 	private static final String UNCHECKED = "unchecked";
-	private static final int EMPTY = -1;
+	
+	private StorageFile storageFile;
 
 	public StorageJSON()  { 
-		
+		storageFile = new StorageFile();
 	}
-	
-	private String checkTaskType(Task task) {
-		if (task.getStartTime() == EMPTY && task.getEndTime() != EMPTY) {
-			return TYPE_TASK;
-		} else if (task.getStartTime() == EMPTY && task.getEndTime() == EMPTY) {
-			return TYPE_FLOAT;
-		} else {
-			return TYPE_EVENT;
-		}
-	}
-	
-	// Retrieve all tasks from file
-    public ArrayList<CategoryWrapper> getAllTasksFromFile(String jsonString) 
+
+    // Create new category if category does not exist
+    public void addNewCategory(String categoryName, String taskType, Task newTask) 
     		throws JsonParseException, JsonMappingException, IOException {
-    	ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        ArrayList<CategoryWrapper> allTasks = 
-        		mapper.readValue(jsonString, new TypeReference<ArrayList<CategoryWrapper>>() {});
-    	return allTasks;
-    }
-    
-    // Add new category if category does not exist
-    @SuppressWarnings(UNCHECKED)
-	public JSONArray addNewCategory(String categoryName, Task newTask) {
-
-    	JSONArray allCategories = new JSONArray();
-    	JSONObject categoryObject = new JSONObject();
-    	JSONObject taskType = new JSONObject();
-    	JSONArray allTaskTypes = new JSONArray();
-    	JSONObject taskObject = convertTaskToJSON(newTask);
-
-    	// Each type task array - task, floatTask or event contains taskObject
-    	allTaskTypes.add(taskObject);
     	
-    	// Check type of task to add under
-    	taskType.put(checkTaskType(newTask), allTaskTypes);
-    	
-    	categoryObject.put(categoryName, taskType);
-    	categoryObject.put(CATEGORY_KEY_NAME, categoryName);
-    	
-    	allCategories.add(categoryObject);
-    	//allCategories.add(categoryObject);
-    	
-    	return allCategories;
+    	ArrayList<CategoryWrapper> allCategories = storageFile.getAllCategoriesFromFile();
+    	Category category = new Category(taskType, newTask);
+    	CategoryWrapper categoryWrapper = new CategoryWrapper(category, categoryName);
+    	allCategories.add(categoryWrapper);
+    	storageFile.setAllCategoriesToFile(allCategories);
     }
     
     // Add new task into existing category
     @SuppressWarnings(UNCHECKED)
-	public JSONArray addNewTask(String categoryName, Task newTask) {
+    public JSONArray addNewTask(String categoryName, String taskType, Task newTask) {
 
     	JSONArray allCategories = new JSONArray();
     	JSONObject categoryObject = new JSONObject();
-    	JSONObject taskType = new JSONObject();
+    	JSONObject taskTypeObject = new JSONObject();
     	JSONArray allTaskTypes = new JSONArray();
     	JSONObject taskObject = convertTaskToJSON(newTask);
 
@@ -103,10 +66,10 @@ public class StorageJSON {
     	allTaskTypes.add(taskObject);
     	
     	// Check type of task to add under
-    	taskType.put(checkTaskType(newTask), allTaskTypes);
+    	taskTypeObject.put(taskType, allTaskTypes);
     	
     	categoryObject.put(categoryName, taskType);
-    	categoryObject.put("categoryName", categoryName);
+    	categoryObject.put(CATEGORY_KEY_NAME, categoryName);
     	
     	allCategories.add(categoryObject);
     	//allCategories.add(categoryObject);

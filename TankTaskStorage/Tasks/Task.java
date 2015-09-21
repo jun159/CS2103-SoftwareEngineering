@@ -1,4 +1,4 @@
-package Task;
+package Tasks;
 
 public class Task {
 	
@@ -21,8 +21,8 @@ public class Task {
     		long reminder, boolean isDone) {
     	setName(taskName);
 		setDescription(taskDescription);
-		setStartDate("-1");
-		setEndDate("-1");
+		setStartDate(null);
+		setEndDate(null);
 		setStartTime(-1);
 		setEndTime(-1);
 		setPriority(priority);
@@ -35,7 +35,7 @@ public class Task {
 			int priority, int reminder, boolean isDone) {
 		setName(taskName);
 		setDescription(taskDescription);
-		setStartDate("-1");
+		setStartDate(null);
 		setEndDate(deadline);
 		setStartTime(-1);
 		setEndTime(-1);
@@ -45,8 +45,8 @@ public class Task {
 	}
 
 	// Event
-	public Task(String eventName, String eventDescription, String startDate, String endDate, 
-			long startTime, long endTime, int priority, long reminder) {
+	public Task(String eventName, String eventDescription, String startDate, String endDate, long startTime,
+			long endTime, int priority, long reminder, String categoryName) {
 		setName(eventName);
 		setDescription(eventDescription);
 		setStartDate(startDate);
