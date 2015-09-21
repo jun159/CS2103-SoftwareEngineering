@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import Tasks.Task;
+import Tasks.Category;
 import Tasks.CategoryWrapper;
 
 public class Storage {
@@ -47,8 +48,8 @@ public class Storage {
 		storageJSON.addNewCategory(category, TYPE_EVENT, newEvent);
 	}
 	
-	public void setUndone(String taskID) {
-		// TODO Auto-generated method stub
+	// TODO: I should expect category and name of task instead of taskID (Logic)
+	public void setUndone(String categoryName, String taskType, String taskName) {
 		
 	}
 
@@ -57,7 +58,7 @@ public class Storage {
 		
 	}
 
-	public void setCol(String categoryName, String colourId) {
+	public void setColour(String categoryName, String colourId) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -117,25 +118,80 @@ public class Storage {
 		
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws JSONException
+	 * @throws IOException
+	 */
 	public ArrayList<CategoryWrapper> getAllCategories()
 			throws JsonParseException, JsonMappingException, JSONException, IOException {
-		ArrayList<CategoryWrapper> allCategories = storageFile.getAllCategoriesFromFile();
+		return storageFile.getAllCategoriesFromFile();
+	}
+	
+	/**
+	 * 
+	 * @param categoryName
+	 * @param taskType
+	 * @return
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public ArrayList<Task> getAllTargetCategoryTasks(String categoryName, String taskType) 
+			throws ParseException, IOException, JSONException {
 		
-		if(allCategories == null) {
-			return new ArrayList<CategoryWrapper> ();
-		} else {
-			return allCategories;
+		ArrayList<CategoryWrapper> allCategories = getAllCategories();
+		ArrayList<Task> allCategoryTasks = new ArrayList<Task> ();
+		int categorySize = allCategories.size();
+		
+		for(int i = 0; i < categorySize; i++) {
+			String currentCategoryName = allCategories.get(i).getCategoryName();
+			if (currentCategoryName.equals(categoryName)) {
+				Category category = allCategories.get(i).getCategory();
+				
+				allCategoryTasks.addAll(category.getTask());
+				allCategoryTasks.addAll(category.getFloatTask());
+				allCategoryTasks.addAll(category.getEvent());
+				break;
+			}
 		}
-	}
-
-	public void getFloatingTasks() throws ParseException, IOException {
-		// TODO Auto-generated method stub
 		
+		return allCategoryTasks;
 	}
-
-	public ArrayList<Task> getEvents() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * Pass types into parameter
+	 * @param taskType
+	 * @return
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public ArrayList<Task> getAllTargetTypeTasks(String taskType) 
+			throws ParseException, IOException, JSONException {
+		
+		ArrayList<CategoryWrapper> allCategories = getAllCategories();
+		ArrayList<Task> allTasks = new ArrayList<Task> ();
+		int categorySize = allCategories.size();
+		
+		for(int i = 0; i < categorySize; i++) {
+			switch(taskType) {
+				case TYPE_TASK:
+					allTasks.addAll(allCategories.get(i).getCategory().getTask());
+					break;
+				case TYPE_FLOAT:
+					allTasks.addAll(allCategories.get(i).getCategory().getFloatTask());
+					break;
+				case TYPE_EVENT:
+					allTasks.addAll(allCategories.get(i).getCategory().getEvent());
+					break;
+			}
+		}
+		
+		return allTasks;
 	}
 
 }

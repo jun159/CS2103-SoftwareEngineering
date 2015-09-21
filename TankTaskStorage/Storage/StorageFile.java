@@ -216,7 +216,6 @@ public class StorageFile {
 		String message = "";
 		initializeReader(textFile);
 		String currentText;
-
 		if ((currentText = bufferedReader.readLine()) == null) {
 			message = String.format(Constant.MESSAGE_EMPTY_FILE, INPUT_FILE_NAME) + Constant.MESSAGE_NEW_LINE;
 		} else {
@@ -227,18 +226,14 @@ public class StorageFile {
 		
 		return message;
 	}
-
 	public String deleteTextFromFile(String index) throws IOException {
 		String message = "";
 		
 		initializeTempFile();
 		int textIndex = 1;
-
 		String currentText;
-
 		while((currentText = bufferedReader.readLine()) != null) {
 			String currentIndex = (currentText.split(" ") [Constant.START_INDEX]).trim();
-
 			if(currentIndex.equals(index)) {
 				message = String.format(Constant.MESSAGE_DELETE_TEXT, 
 						INPUT_FILE_NAME, currentText.substring(Constant.START_INDEX_OF_TEXT));
@@ -249,7 +244,6 @@ public class StorageFile {
 				bufferedWriter.flush();
 			}
 		}
-
 		deleteAndRenameFile();
 		
 		return message;
