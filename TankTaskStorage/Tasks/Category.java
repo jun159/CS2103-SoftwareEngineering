@@ -1,47 +1,51 @@
 package Tasks;
 
-import java.util.TreeSet;
+import java.util.HashMap;
 
 public class Category {
 	
 	/* The following represents the list of task types */
-	private TreeSet<Task> task;
-	private TreeSet<Task> floatTask;
-	private TreeSet<Task> event;
+	private HashMap<String, Task> tasks;
+	private HashMap<String, Task> floatTasks;
+	private HashMap<String, Task> events;
+	
+	private String categoryColour;
 	
 	public Category() {
-		setTask(new TreeSet<Task> ());
-		setFloatTask(new TreeSet<Task> ());
-		setEvent(new TreeSet<Task> ());
+		setTasks(new HashMap<String, Task>());
+		setFloatTasks(new HashMap<String, Task>());
+		setEvents(new HashMap<String, Task>());
 	}
-	
-	public Category(TreeSet<Task> task, TreeSet<Task> floatTask, TreeSet<Task> event) {
-		setTask(task);
-		setFloatTask(floatTask);
-		setEvent(event);
+
+	public String getCategoryColour() {
+		return categoryColour;
 	}
-	
-	public TreeSet<Task> getTask() {
-		return task;
+
+	public void setCategoryColour(String categoryColour) {
+		this.categoryColour = categoryColour;
 	}
-	
-	public void setTask(TreeSet<Task> TreeSet) {
-		this.task = TreeSet;
+
+	public HashMap<String, Task> getTasks() {
+		return tasks;
 	}
-	
-	public TreeSet<Task> getFloatTask() {
-		return floatTask;
+
+	public void setTasks(HashMap<String, Task> tasks) {
+		this.tasks = tasks;
 	}
-	
-	public void setFloatTask(TreeSet<Task> floatTask) {
-		this.floatTask = floatTask;
+
+	public HashMap<String, Task> getFloatTasks() {
+		return floatTasks;
 	}
-	
-	public TreeSet<Task> getEvent() {
-		return event;
+
+	public void setFloatTasks(HashMap<String, Task> floatTasks) {
+		this.floatTasks = floatTasks;
 	}
-	
-	public void setEvent(TreeSet<Task> event) {
-		this.event = event;
+
+	public HashMap<String, Task> getEvents() {
+		return events;
+	}
+
+	public void setEvents(HashMap<String, Task> events) {
+		this.events = events;
 	}
 }

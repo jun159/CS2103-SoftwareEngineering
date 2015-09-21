@@ -4,7 +4,6 @@ public class CategoryWrapper {
 	
 	private Category category;
 	private String categoryName;
-	private String categoryColour;
 	
 	public CategoryWrapper() {
 		
@@ -13,12 +12,6 @@ public class CategoryWrapper {
 	public CategoryWrapper(Category category, String categoryName) {
 		setCategory(category);
 		setCategoryName(categoryName);
-	}
-	
-	public CategoryWrapper(Category category, String categoryName, String categoryColour) {
-		setCategory(category);
-		setCategoryName(categoryName);
-		setCategoryColour(categoryColour);
 	}
 	
 	public Category getCategory() {
@@ -35,13 +28,5 @@ public class CategoryWrapper {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
-	}
-
-	public String getCategoryColour() {
-		return categoryColour;
-	}
-
-	public void setCategoryColour(String categoryColour) {
-		this.categoryColour = categoryColour;
 	}
 }
